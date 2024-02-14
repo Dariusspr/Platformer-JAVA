@@ -11,8 +11,9 @@ import static utils.OSValidator.*;
 import static utils.Constants.GamePanel.*;
 
 public class GamePanel extends JPanel {
-    public GamePanel(){
-
+    private Game game;
+    public GamePanel(Game game){
+        this.game = game;
         KeyboardInputs keyboardInputs = new KeyboardInputs(this);
         MouseInputs mouseInputs = new MouseInputs(this);
 
@@ -33,6 +34,10 @@ public class GamePanel extends JPanel {
             Toolkit.getDefaultToolkit().sync(); // fixes rendering lag on linux
         }
         super.paintComponent(g);
+        game.getPlayer().render(g);
+    }
 
+    public Game getGame() {
+        return this.game;
     }
 }

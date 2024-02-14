@@ -1,13 +1,19 @@
 package main;
 
+import Entities.Player;
 import utils.Constants;
+
+import java.awt.*;
 
 import static utils.Constants.Game.*;
 
 public class Game implements  Runnable{
 
+    private Player player;
+    private GamePanel gamePanel;
     public Game(){
-        GamePanel gamePanel = new GamePanel();
+        player = new Player(200, 200);
+        gamePanel = new GamePanel(this);
         new GameWindow(gamePanel);
 
         gamePanel.requestFocus();
@@ -45,12 +51,12 @@ public class Game implements  Runnable{
             if (deltaUps >= 1.0) { // 1 update
                 deltaUps--;
                 upsCount++;
-                // reupdate
+                update();
             }
             if (deltaFps >= 1.0) { // 1 frame
                 deltaFps--;
                 fpsCount++;
-                // repaint
+                gamePanel.repaint();
             }
 
             if (currentTime - lastSecTime >= SEC_TO_NANO) {
@@ -60,5 +66,13 @@ public class Game implements  Runnable{
                 upsCount = 0;
             }
         }
+    }
+
+    private void update() {
+        player.update();
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }

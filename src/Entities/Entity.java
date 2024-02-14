@@ -1,8 +1,8 @@
 package Entities;
 
 public abstract class Entity {
-    protected float x, y;
-    protected Entity(float x, float y) {
+    protected int x, y;
+    protected Entity(int x, int y) {
         this.x = x;
         this.y = y;
     }
