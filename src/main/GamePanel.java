@@ -8,7 +8,7 @@ import java.awt.*;
 
 import static utils.OSValidator.*;
 
-import static utils.Constants.GamePanel.*;
+import static utils.Constants.Game.*;
 
 public class GamePanel extends JPanel {
     private Game game;
@@ -34,7 +34,7 @@ public class GamePanel extends JPanel {
             Toolkit.getDefaultToolkit().sync(); // fixes rendering lag on linux
         }
         super.paintComponent(g);
-        game.getPlayer().render(g);
+        game.render(g);
     }
 
     public Game getGame() {

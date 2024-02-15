@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static utils.Constants.Player.*;
+import static utils.Load.*;
 
 public class Player extends Entity {
     private BufferedImage[][] animations;
@@ -22,21 +23,17 @@ public class Player extends Entity {
     }
 
     private BufferedImage[] loadImages() {
-        BufferedImage[] img = new BufferedImage[PLAYER_ANIM_COUNT];
+        final String[] PLAYER_ANIM_IMG = {
+                "assets/MainCharacters/" + character + "/Idle.png", "assets/MainCharacters/" + character + "/Hit.png",
+                "assets/MainCharacters/" + character + "/Run.png", "assets/MainCharacters/" + character + "/Jump.png",
+                "assets/MainCharacters/" + character + "/Fall.png", "assets/MainCharacters/" + character + "/DoubleJump.png",
+                "assets/MainCharacters/" + character + "/WallJump.png", "assets/MainCharacters/Appear.png",
+                "assets/MainCharacters/Disappear.png" };
 
-        try {
-            img[0] = ImageIO.read(new File("assets/MainCharacters/"+character+"/Idle.png"));
-            img[1] = ImageIO.read(new File("assets/MainCharacters/"+character+"/Hit.png"));
-            img[2] = ImageIO.read(new File("assets/MainCharacters/"+character+"/Run.png"));
-            img[3] = ImageIO.read(new File("assets/MainCharacters/"+character+"/Jump.png"));
-            img[4] = ImageIO.read(new File("assets/MainCharacters/"+character+"/Fall.png"));
-            img[5] = ImageIO.read(new File("assets/MainCharacters/"+character+"/DoubleJump.png"));
-            img[6] = ImageIO.read(new File("assets/MainCharacters/"+character+"/WallJump.png"));
-            img[7] = ImageIO.read(new File("assets/MainCharacters/Appear.png"));
-            img[8] = ImageIO.read(new File("assets/MainCharacters/Disappear.png"));
+        BufferedImage[] img = new BufferedImage[PLAYER_ANIM_IMG.length];
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        for (int i = 0; i < PLAYER_ANIM_IMG.length; i++) {
+            img[i] = LoadImage(PLAYER_ANIM_IMG[i]);
         }
 
         return img;
@@ -68,10 +65,10 @@ public class Player extends Entity {
 
     public void render(Graphics g) {
         if (playerAction >= PLAYER_APPEAR) {
-            g.drawImage(animations[playerAction][animationIndex], super.x, super.y , PLAYER_SCALE * PLAYER_ANIM_APPEAR_SIZE, PLAYER_SCALE * PLAYER_ANIM_APPEAR_SIZE, null);
+            g.drawImage(animations[playerAction][animationIndex], super.x, super.y, PLAYER_SCALE * PLAYER_ANIM_APPEAR_SIZE, PLAYER_SCALE * PLAYER_ANIM_APPEAR_SIZE, null);
         }
         else {
-            g.drawImage(animations[playerAction][animationIndex], super.x, super.y , PLAYER_SCALE * PLAYER_ANIM_SIZE, PLAYER_SCALE * PLAYER_ANIM_SIZE, null);
+            g.drawImage(animations[playerAction][animationIndex], super.x, super.y, PLAYER_SCALE * PLAYER_ANIM_SIZE, PLAYER_SCALE * PLAYER_ANIM_SIZE, null);
         }
     }
 
@@ -95,7 +92,6 @@ public class Player extends Entity {
             this.playerAction = action;
             this.animationIndex = 0;
         }
-
     }
 
     public void updateAnimation() {

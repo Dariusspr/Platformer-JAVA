@@ -1,6 +1,7 @@
 package main;
 
 import Entities.Player;
+import levels.LevelHandler;
 import utils.Constants;
 
 import java.awt.*;
@@ -11,8 +12,10 @@ public class Game implements  Runnable{
 
     private Player player;
     private GamePanel gamePanel;
+    private LevelHandler levelHandler;
     public Game(){
         player = new Player(200, 200);
+        levelHandler = new LevelHandler();
         gamePanel = new GamePanel(this);
         new GameWindow(gamePanel);
 
@@ -68,7 +71,13 @@ public class Game implements  Runnable{
         }
     }
 
+    public void render(Graphics g) {
+        levelHandler.render(g);
+        player.render(g);
+    }
+
     private void update() {
+        levelHandler.update();
         player.update();
     }
 
