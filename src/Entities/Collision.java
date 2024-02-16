@@ -19,7 +19,8 @@ public class Collision {
     }
 
     public static boolean canMoveDown(Rectangle2D.Float hitbox, float speed, int[][] levelData) {
-        return !(isTerrain(hitbox.x, hitbox.y + hitbox.height + speed, levelData) || isTerrain(hitbox.x + hitbox.width / 2, hitbox.y + hitbox.height + speed, levelData) || isTerrain(hitbox.x + hitbox.width, hitbox.y + hitbox.height + speed, levelData));
+        return !(isTerrain(hitbox.x, hitbox.y + hitbox.height + speed, levelData) || isTerrain(hitbox.x + hitbox.width / 2, hitbox.y + hitbox.height + speed, levelData) || isTerrain(hitbox.x + hitbox.width, hitbox.y + hitbox.height + speed, levelData)) &&
+                (isPlatform(hitbox.x, hitbox.y + hitbox.height + speed, levelData) && isPlatform(hitbox.x + hitbox.width / 2, hitbox.y + hitbox.height + speed, levelData) && isPlatform(hitbox.x + hitbox.width, hitbox.y + hitbox.height + speed, levelData));
     }
 
     private static boolean isTerrain(float x, float y, int[][] levelData) {
@@ -32,5 +33,11 @@ public class Collision {
         int tile = levelData[rowTile][colTile];
 
         return !(tile == 84 || tile == 101 || tile >= 108);
+    }
+    private static boolean isPlatform(float x, float y, int[][] levelData) {
+        int rowTile = (int) (y / TILE_SIZE);
+        int colTile = (int) (x / TILE_SIZE);
+        int tile = levelData[rowTile][colTile];
+        return !(tile >= 113);
     }
 }

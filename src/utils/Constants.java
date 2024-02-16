@@ -7,7 +7,6 @@ public class Constants {
         public static final int UPS_COUNT = 200;
 
 
-
         public static final double SEC_TO_NANO = 1e9;
         public static final float GAME_SCALE = 1.5f;
 
@@ -28,14 +27,14 @@ public class Constants {
 
     public static class Player {
         public static final float PLAYER_MOVE_SPEED = 1.1f * Game.GAME_SCALE;
-        public static final float PLAYER_JUMP_SPEED = 3.5f * Game.GAME_SCALE;
+        public static final float PLAYER_JUMP_SPEED = 4.0f * Game.GAME_SCALE;
         public static final float GRAVITY = 0.05f * Game.GAME_SCALE;
-        public static final float PLAYER_FALL_AFTER_COLLISION_SPEED = 1.6f * Game.GAME_SCALE;
+        public static final float PLAYER_FALL_AFTER_COLLISION_SPEED = 1.7f * Game.GAME_SCALE;
         public static final int PLAYER_ANIMATION_SPEED = 13;
 
 
         public static final float PLAYER_SCALE = 1.8f;
-        public static final int PLAYER_ANIM_APPEAR_SIZE = 72; // appear/disappear
+        public static final int PLAYER_ANIM_APPEAR_SIZE = 72;
         public static final int PLAYER_ANIM_SIZE = 32;
         public  static final int PLAYER_SIZE = (int) (PLAYER_ANIM_SIZE * PLAYER_SCALE * Game.GAME_SCALE);
 

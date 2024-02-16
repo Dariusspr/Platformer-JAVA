@@ -18,7 +18,7 @@ public class Player extends Entity {
     private int playerAction;
     private boolean movingUp, movingDown, movingLeft, movingRight;
     private final String character = "MaskDude";
-    private boolean flying;
+    private boolean flying, doubleJump;
     private float flyingSpeed = 0;
 
 
@@ -95,8 +95,14 @@ public class Player extends Entity {
     }
 
     private void jump() {
-        if (flying)
+        if (flying && flyingSpeed <= 0 && !doubleJump) {
+            doubleJump = true;
+            flyingSpeed = (float) (PLAYER_JUMP_SPEED * 0.8f);
             return;
+        }
+        if (flying) {
+            return;
+        }
         flying = true;
         flyingSpeed = PLAYER_JUMP_SPEED;
     }
@@ -134,6 +140,7 @@ public class Player extends Entity {
             else {
                 y -= (TILE_SIZE - 1 - (int)(hitbox.y + hitbox.height) % TILE_SIZE);
                 flying = false;
+                doubleJump = false;
             }
         }
 
