@@ -2,14 +2,11 @@ package utils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Scanner;
 
 import static utils.Constants.Game.*;
-import static utils.Constants.Level.*;
+import static utils.Constants.LevelHandler.*;
 
 public class Load {
 

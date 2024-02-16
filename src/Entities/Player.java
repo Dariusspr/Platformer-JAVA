@@ -1,13 +1,15 @@
 package Entities;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import main.Game;
 
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+
+import static utils.Constants.Game.*;
 import static utils.Constants.Player.*;
 import static utils.Load.*;
+import static Entities.Collision.*;
 
 public class Player extends Entity {
     private BufferedImage[][] animations;
@@ -16,10 +18,19 @@ public class Player extends Entity {
     private int playerAction;
     private boolean movingUp, movingDown, movingLeft, movingRight;
     private final String character = "MaskDude";
+    private boolean flying;
+    private float flyingSpeed = 0;
 
-    public Player(int x, int y) {
-        super(x, y);
+
+    private final Game game;
+
+    public Player(float x, float y, int width, int height, float speed,
+                  int hitBoxWidth, int hitboxHeight, int offsetWidth, int offsetHeight,
+                  Game game) {
+        super(x, y, width, height, speed, hitBoxWidth, hitboxHeight, offsetWidth, offsetHeight);
+        this.game = game;
         loadAnimations();
+        setAction(PLAYER_IDLE);
     }
 
     private BufferedImage[] loadImages() {
@@ -59,38 +70,127 @@ public class Player extends Entity {
 
     public void update() {
         updatePosition();
+        updateAction();
         updateAnimation();
     }
 
 
     public void render(Graphics g) {
         if (playerAction >= PLAYER_APPEAR) {
-            g.drawImage(animations[playerAction][animationIndex], super.x, super.y, PLAYER_SCALE * PLAYER_ANIM_APPEAR_SIZE, PLAYER_SCALE * PLAYER_ANIM_APPEAR_SIZE, null);
+            // TODO: appear/disapper animation
         }
         else {
-            g.drawImage(animations[playerAction][animationIndex], super.x, super.y, PLAYER_SCALE * PLAYER_ANIM_SIZE, PLAYER_SCALE * PLAYER_ANIM_SIZE, null);
+            super.render(animations[playerAction][animationIndex], g);
         }
     }
 
     public void updatePosition() {
-        if (this.movingUp) {
-            super.y -= PLAYER_SPEED;
+        if (movingUp) {
+            jump();
         }
-        if (this.movingDown) {
-            super.y += PLAYER_SPEED;
-        }
-        if (this.movingLeft) {
-            super.x -= PLAYER_SPEED;
-        }
-        if (this.movingRight) {
-            super.x += PLAYER_SPEED;
+        updateYPosition();
+        if (movingLeft || movingRight) {
+            updateXPosition();
         }
     }
 
-    public void setAction(int action) {
-        if (this.playerAction != action) {
-            this.playerAction = action;
-            this.animationIndex = 0;
+    private void jump() {
+        if (flying)
+            return;
+        flying = true;
+        flyingSpeed = PLAYER_JUMP_SPEED;
+    }
+
+    private void updateYPosition() {
+        float x = getX();
+        float y = getY();
+        Rectangle2D.Float hitbox = getHitbox();
+
+        if (!flying) {
+            if (canMoveDown(hitbox, 0.1f, game.getLevelHandler().getCurrentLevelData())) {
+                flying = true;
+                flyingSpeed = -0.1f;
+            }
+            else {
+                return;
+            }
+        }
+
+        if (flyingSpeed > 0) {
+            if (movingUp && canMoveUp(hitbox, flyingSpeed, game.getLevelHandler().getCurrentLevelData())) {
+                y -= flyingSpeed;
+                flyingSpeed -= GRAVITY;
+            }
+            else {
+                y -= (int) hitbox.y % TILE_SIZE;
+                flyingSpeed -= PLAYER_FALL_AFTER_COLLISION_SPEED;
+            }
+        }
+        else {
+            if (canMoveDown(hitbox, -flyingSpeed, game.getLevelHandler().getCurrentLevelData())) {
+                y -= flyingSpeed;
+                flyingSpeed -= GRAVITY;
+            }
+            else {
+                y -= (TILE_SIZE - 1 - (int)(hitbox.y + hitbox.height) % TILE_SIZE);
+                flying = false;
+            }
+        }
+
+        super.updatePosition(x, y);
+        super.updateHitbox(x, y);
+    }
+
+    private void updateXPosition() {
+        float x = getX();
+        float y = getY();
+        Rectangle2D.Float hitbox = getHitbox();
+        if (movingLeft && !movingRight) {
+            if (canMoveLeft(hitbox, PLAYER_MOVE_SPEED, game.getLevelHandler().getCurrentLevelData())){
+                x -= PLAYER_MOVE_SPEED;
+            }
+            else {
+                x -= (int) hitbox.x % TILE_SIZE;
+            }
+            setDirecton(LEFT_DIRECTION);
+        }
+
+        if (movingRight && !movingLeft) {
+            if (canMoveRight(hitbox, PLAYER_MOVE_SPEED, game.getLevelHandler().getCurrentLevelData())) {
+                x += PLAYER_MOVE_SPEED;
+            }
+            else {
+                x += (TILE_SIZE - 1 - (hitbox.x + hitbox.width) % TILE_SIZE);
+            }
+            setDirecton(RIGHT_DIRECTION);
+        }
+
+        super.updatePosition(x, y);
+        super.updateHitbox(x, y);
+    }
+
+    private void updateAction() {
+        if (flying && flyingSpeed > 0) {
+            setAction(PLAYER_JUMP);
+        }
+        else if (flying && flyingSpeed < 0) {
+            setAction(PLAYER_FALL);
+        }
+        else if (movingRight && !movingLeft) {
+            setAction(PLAYER_RUN);
+        }
+        else if (!movingRight && movingLeft) {
+            setAction(PLAYER_RUN);
+        }
+        else {
+            setAction(PLAYER_IDLE);
+        }
+    }
+
+    private void setAction(int action) {
+        if (playerAction != action) {
+            playerAction = action;
+            animationIndex = 0;
         }
     }
 

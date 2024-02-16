@@ -2,11 +2,11 @@ package main;
 
 import Entities.Player;
 import levels.LevelHandler;
-import utils.Constants;
 
 import java.awt.*;
 
 import static utils.Constants.Game.*;
+import static utils.Constants.Player.*;
 
 public class Game implements  Runnable{
 
@@ -14,7 +14,9 @@ public class Game implements  Runnable{
     private GamePanel gamePanel;
     private LevelHandler levelHandler;
     public Game(){
-        player = new Player(200, 200);
+        player = new Player(200, 300, PLAYER_SIZE, PLAYER_SIZE, PLAYER_MOVE_SPEED,
+                PLAYER_HITBOX_WIDTH, PLAYER_HITBOX_HEIGHT, PLAYER_WIDTH_OFFSET, PLAYER_HEIGHT_OFFSET,
+                this);
         levelHandler = new LevelHandler();
         gamePanel = new GamePanel(this);
         new GameWindow(gamePanel);
@@ -83,5 +85,8 @@ public class Game implements  Runnable{
 
     public Player getPlayer() {
         return player;
+    }
+    public LevelHandler getLevelHandler() {
+        return levelHandler;
     }
 }

@@ -1,12 +1,10 @@
 package levels;
 
-import main.Game;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import static utils.Constants.Game.*;
-import static utils.Constants.Level.*;
+import static utils.Constants.LevelHandler.*;
 import static utils.Load.*;
 
 public class LevelHandler {
@@ -16,6 +14,8 @@ public class LevelHandler {
     private BufferedImage[] terrainArray;
     private int[][] levelData;
 
+    private Level levelBasic;
+
     public LevelHandler() {
         loadImages();
         loadSubImagesToArray();
@@ -23,7 +23,7 @@ public class LevelHandler {
     }
 
     private void loadLevelData() {
-        levelData = loadLevel(BASIC_LEVEL_DATA);
+         levelBasic = new Level(loadLevel(BASIC_LEVEL_DATA));
     }
 
     private void loadSubImagesToArray() {
@@ -46,18 +46,21 @@ public class LevelHandler {
 
     public void render(Graphics g) {
         renderTerrain(g);
-        //g.drawImage(terrainArray[80], 100, 100, null);
     }
 
     private void renderTerrain(Graphics g) {
         for (int row = 0; row < TILE_ROW_COUNT; row++) {
             for (int col = 0; col < TILE_COL_COUNT; col++) {
-                g.drawImage(terrainArray[levelData[row][col]], col  * TILE_SIZE, row  * TILE_SIZE, TILE_SIZE, TILE_SIZE ,null);
+                g.drawImage(terrainArray[levelBasic.getTile(row, col)], col  * TILE_SIZE, row  * TILE_SIZE, TILE_SIZE, TILE_SIZE ,null);
             }
         }
     }
 
     public void update() {
+    }
+
+    public int[][] getCurrentLevelData() {
+        return levelBasic.getLevelData();
     }
 
 }
