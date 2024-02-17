@@ -1,4 +1,4 @@
-package Entities;
+package entities;
 
 import java.awt.geom.Rectangle2D;
 import static utils.Constants.Game.*;
@@ -24,7 +24,8 @@ public class Collision {
     }
 
     private static boolean isTerrain(float x, float y, int[][] levelData) {
-        if (x < 0 || x >= PANEL_WIDTH || y < 0 || y >= PANEL_HEIGHT) { // TODO: change to level width/height
+        int levelEndX = levelData[0].length * TILE_SIZE;
+        if (x < 0 || x >= levelEndX || y < 0 || y >= PANEL_HEIGHT) { // TODO: change to level width/height
             return true;
         }
 

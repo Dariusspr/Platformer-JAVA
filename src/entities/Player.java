@@ -1,6 +1,7 @@
-package Entities;
+package entities;
 
 import main.Game;
+import states.Ingame;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -9,7 +10,7 @@ import java.awt.image.BufferedImage;
 import static utils.Constants.Game.*;
 import static utils.Constants.Player.*;
 import static utils.Load.*;
-import static Entities.Collision.*;
+import static entities.Collision.*;
 
 public class Player extends Entity {
     private BufferedImage[][] animations;
@@ -22,13 +23,13 @@ public class Player extends Entity {
     private float flyingSpeed = 0;
 
 
-    private final Game game;
+    private final Ingame ingame;
 
     public Player(float x, float y, int width, int height, float speed,
                   int hitBoxWidth, int hitboxHeight, int offsetWidth, int offsetHeight,
-                  Game game) {
+                  Ingame ingame) {
         super(x, y, width, height, speed, hitBoxWidth, hitboxHeight, offsetWidth, offsetHeight);
-        this.game = game;
+        this.ingame = ingame;
         loadAnimations();
         setAction(PLAYER_IDLE);
     }
@@ -113,7 +114,7 @@ public class Player extends Entity {
         Rectangle2D.Float hitbox = getHitbox();
 
         if (!flying) {
-            if (canMoveDown(hitbox, 0.1f, game.getLevelHandler().getCurrentLevelData())) {
+            if (canMoveDown(hitbox, 0.1f, ingame.getLevelHandler().getCurrentLevelData())) {
                 flying = true;
                 flyingSpeed = -0.1f;
             }
@@ -123,17 +124,20 @@ public class Player extends Entity {
         }
 
         if (flyingSpeed > 0) {
-            if (movingUp && canMoveUp(hitbox, flyingSpeed, game.getLevelHandler().getCurrentLevelData())) {
+            if (movingUp && canMoveUp(hitbox, flyingSpeed, ingame.getLevelHandler().getCurrentLevelData())) {
                 y -= flyingSpeed;
                 flyingSpeed -= GRAVITY;
             }
-            else {
+            else if (movingUp){
                 y -= (int) hitbox.y % TILE_SIZE;
                 flyingSpeed -= PLAYER_FALL_AFTER_COLLISION_SPEED;
             }
+            else {
+                flyingSpeed = 0;
+            }
         }
         else {
-            if (canMoveDown(hitbox, -flyingSpeed, game.getLevelHandler().getCurrentLevelData())) {
+            if (canMoveDown(hitbox, -flyingSpeed, ingame.getLevelHandler().getCurrentLevelData())) {
                 y -= flyingSpeed;
                 flyingSpeed -= GRAVITY;
             }
@@ -153,7 +157,7 @@ public class Player extends Entity {
         float y = getY();
         Rectangle2D.Float hitbox = getHitbox();
         if (movingLeft && !movingRight) {
-            if (canMoveLeft(hitbox, PLAYER_MOVE_SPEED, game.getLevelHandler().getCurrentLevelData())){
+            if (canMoveLeft(hitbox, PLAYER_MOVE_SPEED, ingame.getLevelHandler().getCurrentLevelData())){
                 x -= PLAYER_MOVE_SPEED;
             }
             else {
@@ -163,7 +167,7 @@ public class Player extends Entity {
         }
 
         if (movingRight && !movingLeft) {
-            if (canMoveRight(hitbox, PLAYER_MOVE_SPEED, game.getLevelHandler().getCurrentLevelData())) {
+            if (canMoveRight(hitbox, PLAYER_MOVE_SPEED, ingame.getLevelHandler().getCurrentLevelData())) {
                 x += PLAYER_MOVE_SPEED;
             }
             else {
@@ -177,7 +181,10 @@ public class Player extends Entity {
     }
 
     private void updateAction() {
-        if (flying && flyingSpeed > 0) {
+        if (flying && flyingSpeed > 0 && doubleJump) {
+            setAction(PLAYER_DOUBLE_JUMP);
+        }
+        else if (flying && flyingSpeed > 0) {
             setAction(PLAYER_JUMP);
         }
         else if (flying && flyingSpeed < 0) {

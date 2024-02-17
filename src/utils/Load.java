@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Scanner;
 
-import static utils.Constants.Game.*;
 import static utils.Constants.LevelHandler.*;
 
 public class Load {
@@ -22,13 +21,13 @@ public class Load {
 
     public static int[][] loadLevel(String path) {
         final String COMMA_DELIMITER = ",";
-        int[][] levelData = new int[TILE_ROW_COUNT][TILE_COL_COUNT]; // TODO: change to level size
+        int[][] levelData = new int[LEVEL_HEIGHT][LEVEL_MAX_COL];
         try {
             Scanner scanner = new Scanner(new File(path));
             int row = 0;
-            while (scanner.hasNextLine() && row < TILE_ROW_COUNT) {
+            while (scanner.hasNextLine() && row < LEVEL_HEIGHT) {
                 String[] values = scanner.nextLine().split(COMMA_DELIMITER);
-                for (int col = 0; col < TILE_COL_COUNT; col++) {
+                for (int col = 0; col < LEVEL_MAX_COL; col++) {
                     int value = Integer.parseInt(values[col]);
                     if (value > TERRAIN_WIDTH * TERRAIN_HEIGHT) { // exceeds tile value
                         value = 0;

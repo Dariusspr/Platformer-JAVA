@@ -1,23 +1,22 @@
 package main;
 
-import Entities.Player;
-import levels.LevelHandler;
+import states.GameState;
+import states.Ingame;
+import states.StartMenu;
 
 import java.awt.*;
 
 import static utils.Constants.Game.*;
-import static utils.Constants.Player.*;
 
 public class Game implements  Runnable{
-
-    private Player player;
     private GamePanel gamePanel;
-    private LevelHandler levelHandler;
+
+    private Ingame ingame;
+    private StartMenu startMenu;
+
     public Game(){
-        player = new Player(200, 300, PLAYER_SIZE, PLAYER_SIZE, PLAYER_MOVE_SPEED,
-                PLAYER_HITBOX_WIDTH, PLAYER_HITBOX_HEIGHT, PLAYER_WIDTH_OFFSET, PLAYER_HEIGHT_OFFSET,
-                this);
-        levelHandler = new LevelHandler();
+        ingame = new Ingame(this);
+        startMenu = new StartMenu(this);
         gamePanel = new GamePanel(this);
         new GameWindow(gamePanel);
 
@@ -74,19 +73,57 @@ public class Game implements  Runnable{
     }
 
     public void render(Graphics g) {
-        levelHandler.render(g);
-        player.render(g);
+        switch (GameState.state) {
+            case START_MENU:
+                startMenu.render(g);
+                break;
+            case INGAME:
+               ingame.render(g);
+                break;
+            case EDITOR:
+                break;
+        }
     }
 
     private void update() {
-        levelHandler.update();
-        player.update();
+        switch (GameState.state) {
+            case START_MENU:
+                startMenu.update();
+                break;
+            case INGAME:
+                ingame.update();
+                break;
+            case EDITOR:
+                break;
+        }
+    }
+    public Ingame getIngame() {
+        return ingame;
+    }
+    public StartMenu getStartMenu() {
+        return startMenu;
     }
 
-    public Player getPlayer() {
-        return player;
-    }
-    public LevelHandler getLevelHandler() {
-        return levelHandler;
+    public void setState(GameState state) {
+        switch (state) {
+            case START_MENU:
+                GameState.state = state;
+                break;
+            case MENU:
+                break;
+            case INGAME:
+                if (GameState.state == GameState.EDITOR) {
+                    LEVEL_SCALE = 1.0f;
+                }
+                GameState.state = state;
+                break;
+            case EDITOR:
+                LEVEL_SCALE = 0.5f;
+                GameState.state = state;
+                break;
+            case PAUSED:
+                break;
+        }
+
     }
 }

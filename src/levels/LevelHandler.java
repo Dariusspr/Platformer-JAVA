@@ -12,7 +12,7 @@ public class LevelHandler {
     private final String BASIC_LEVEL_DATA = "assets/Levels/25x40Basic.csv";
     private BufferedImage terrainImg;
     private BufferedImage[] terrainArray;
-    private int[][] levelData;
+    private int offsetWidthRender = 0;
 
     private Level levelBasic;
 
@@ -50,10 +50,14 @@ public class LevelHandler {
 
     private void renderTerrain(Graphics g) {
         for (int row = 0; row < TILE_ROW_COUNT; row++) {
-            for (int col = 0; col < TILE_COL_COUNT; col++) {
-                g.drawImage(terrainArray[levelBasic.getTile(row, col)], col  * TILE_SIZE, row  * TILE_SIZE, TILE_SIZE, TILE_SIZE ,null);
+            for (int col = 0; col < getCurrentLevelData()[0].length; col++) {
+                g.drawImage(terrainArray[levelBasic.getTile(row, col)], (int)(LEVEL_SCALE * col  * TILE_SIZE) - offsetWidthRender, (int)(LEVEL_SCALE * row  * TILE_SIZE), (int)(TILE_SIZE * LEVEL_SCALE), (int)(LEVEL_SCALE * TILE_SIZE),null);
             }
         }
+    }
+
+    public void setOffsetRender(int x) {
+        offsetWidthRender = x;
     }
 
     public void update() {

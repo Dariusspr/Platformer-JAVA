@@ -1,14 +1,18 @@
 package utils;
 
+import static utils.Constants.Game.PANEL_HEIGHT;
+import static utils.Constants.Game.PANEL_WIDTH;
+
 public class Constants {
     public static class Game {
+        public static float LEVEL_SCALE = 1.0f;
+
+        public static final float GAME_SCALE = 1.4f;
 
         public static final int FPS_COUNT = 144;
         public static final int UPS_COUNT = 200;
 
-
         public static final double SEC_TO_NANO = 1e9;
-        public static final float GAME_SCALE = 1.5f;
 
         public static final int TILE_INIT_SIZE = 16;
         private static final float TILE_SCALE = 1.7f;
@@ -17,9 +21,16 @@ public class Constants {
         public static final int TILE_SIZE = (int)(TILE_SCALE * TILE_INIT_SIZE * GAME_SCALE);
         public static final int PANEL_WIDTH = (int) (TILE_SIZE * TILE_COL_COUNT);
         public static final int PANEL_HEIGHT = (int) (TILE_SIZE * TILE_ROW_COUNT);
+        public static int LEFT_TILE_BORDER = (int) (0.4  * TILE_COL_COUNT);
+        public static int RIGHT_TILE_BORDER = (int) (0.6  * TILE_COL_COUNT);
+        public static int MAX_TILE_OFFSET = LevelHandler.LEVEL_MAX_COL - TILE_COL_COUNT;
 
         public static final int LEFT_DIRECTION = -1;
         public static final int RIGHT_DIRECTION = 1;
+
+        public static void changeGameScale(float scale) {
+            LEVEL_SCALE = scale;
+        }
     }
     public static class GameWindow {
         public static final String WINDOW_NAME = "Platformer";
@@ -59,7 +70,29 @@ public class Constants {
     }
 
     public static class LevelHandler {
+        public static int LEVEL_MAX_COL = 80;
+        public static int LEVEL_HEIGHT = 25;
+
+
         public static int TERRAIN_WIDTH = 17; // TILES
         public static int TERRAIN_HEIGHT = 7; // TILES
+    }
+
+    public static class UI {
+        public static int BUTTON_ANIM_LENGTH = 4;
+        public static int BUTTON_ANIM_HEIGHT = 32;
+        public static int BUTTON_ANIM_WIDTH = 96;
+        public static int BUTTON_ANIM_SPEED = 33;
+        public static int BUTTON_HEIGHT = (int) (Game.GAME_SCALE * BUTTON_ANIM_HEIGHT);
+        public static int BUTTON_WIDTH = (int) (Game.GAME_SCALE * BUTTON_ANIM_WIDTH);
+
+       public static class StartMenu {
+           public static final String PLAYBUTTON_PATH = "assets/Buttons/PlayButton.png";
+
+           public static int PLAYBUTTON_HEIGHT = (int) BUTTON_HEIGHT * 2;
+           public static int PLAYBUTTON_WIDTH = (int) BUTTON_WIDTH * 2;
+           public static int PLAYBUTTON_POSX = (int) (PANEL_WIDTH * 0.4f);
+           public static int PLAYBUTTON_POSY = (int) (PANEL_HEIGHT * 0.4f);
+       }
     }
 }
