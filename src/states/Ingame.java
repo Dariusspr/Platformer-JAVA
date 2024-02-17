@@ -18,12 +18,14 @@ public class Ingame extends State implements StateHandler{
     private LevelHandler levelHandler;
     private int offsetWidthRender = 0;
 
+
     public Ingame(Game game) {
         super(game);
-        player = new Player(200, 300, PLAYER_SIZE, PLAYER_SIZE, PLAYER_MOVE_SPEED,
+        levelHandler = new LevelHandler();
+
+        player = new Player(levelHandler.getPlayerX(), levelHandler.getPlayerY(), PLAYER_SIZE, PLAYER_SIZE, PLAYER_MOVE_SPEED,
                 PLAYER_HITBOX_WIDTH, PLAYER_HITBOX_HEIGHT, PLAYER_WIDTH_OFFSET, PLAYER_HEIGHT_OFFSET,
                 this);
-        levelHandler = new LevelHandler();
     }
 
     @Override
@@ -94,16 +96,12 @@ public class Ingame extends State implements StateHandler{
             case KeyEvent.VK_D:
                 player.setMovingRight(true);
                 break;
-            case KeyEvent.VK_F1: {
-                game.setState(GameState.EDITOR);
-                break;
             }
         }
-    }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        switch(e.getKeyCode()) {
+        switch (e.getKeyCode()) {
             case KeyEvent.VK_SPACE:
             case KeyEvent.VK_W:
                 player.setMovingUp(false);
@@ -114,6 +112,15 @@ public class Ingame extends State implements StateHandler{
             case KeyEvent.VK_D:
                 player.setMovingRight(false);
                 break;
+            case KeyEvent.VK_F1:
+                GameState.setState(GameState.EDITOR);
+                break;
+//            case KeyEvent.VK_F2:
+//                levelHandler.ChangeLevel(levelHandler.getCurrentLevelIndex() - 1);
+//                break;
+//            case KeyEvent.VK_F3:
+//                levelHandler.ChangeLevel(levelHandler.getCurrentLevelIndex() + 1);
+//                break;
         }
     }
 

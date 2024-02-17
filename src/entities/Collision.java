@@ -25,7 +25,7 @@ public class Collision {
 
     private static boolean isTerrain(float x, float y, int[][] levelData) {
         int levelEndX = levelData[0].length * TILE_SIZE;
-        if (x < 0 || x >= levelEndX || y < 0 || y >= PANEL_HEIGHT) { // TODO: change to level width/height
+        if (x < 0 || x >= levelEndX || y < 0 || y >= PANEL_HEIGHT) {
             return true;
         }
 

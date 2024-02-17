@@ -21,8 +21,8 @@ public class Constants {
         public static final int TILE_SIZE = (int)(TILE_SCALE * TILE_INIT_SIZE * GAME_SCALE);
         public static final int PANEL_WIDTH = (int) (TILE_SIZE * TILE_COL_COUNT);
         public static final int PANEL_HEIGHT = (int) (TILE_SIZE * TILE_ROW_COUNT);
-        public static int LEFT_TILE_BORDER = (int) (0.4  * TILE_COL_COUNT);
-        public static int RIGHT_TILE_BORDER = (int) (0.6  * TILE_COL_COUNT);
+        public static int LEFT_TILE_BORDER = (int) (0.5  * TILE_COL_COUNT);
+        public static int RIGHT_TILE_BORDER = (int) (0.5  * TILE_COL_COUNT);
         public static int MAX_TILE_OFFSET = LevelHandler.LEVEL_MAX_COL - TILE_COL_COUNT;
 
         public static final int LEFT_DIRECTION = -1;
@@ -87,12 +87,12 @@ public class Constants {
         public static int BUTTON_WIDTH = (int) (Game.GAME_SCALE * BUTTON_ANIM_WIDTH);
 
        public static class StartMenu {
-           public static final String PLAYBUTTON_PATH = "assets/Buttons/PlayButton.png";
+           public static final String PLAY_BUTTON_PATH = "assets/Buttons/PlayButton.png";
 
-           public static int PLAYBUTTON_HEIGHT = (int) BUTTON_HEIGHT * 2;
-           public static int PLAYBUTTON_WIDTH = (int) BUTTON_WIDTH * 2;
-           public static int PLAYBUTTON_POSX = (int) (PANEL_WIDTH * 0.4f);
-           public static int PLAYBUTTON_POSY = (int) (PANEL_HEIGHT * 0.4f);
+           public static int PLAY_BUTTON_HEIGHT = (int) BUTTON_HEIGHT * 2;
+           public static int PLAY_BUTTON_WIDTH = (int) BUTTON_WIDTH * 2;
+           public static int PLAY_BUTTON_POSX = (int) (PANEL_WIDTH * 0.4f);
+           public static int PLAY_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.4f);
        }
     }
 }

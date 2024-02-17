@@ -10,13 +10,18 @@ import static utils.Constants.LevelHandler.*;
 public class Load {
 
     public static BufferedImage LoadImage(String path) {
-        BufferedImage img = null;
+        BufferedImage img;
         try {
             img = ImageIO.read(new File(path));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return img;
+    }
+
+    public static String[] loadFileNames(String directory) {
+        File dir = new File(directory);
+        return dir.list();
     }
 
     public static int[][] loadLevel(String path) {

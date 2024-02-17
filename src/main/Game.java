@@ -1,5 +1,6 @@
 package main;
 
+import states.Editor;
 import states.GameState;
 import states.Ingame;
 import states.StartMenu;
@@ -9,14 +10,15 @@ import java.awt.*;
 import static utils.Constants.Game.*;
 
 public class Game implements  Runnable{
-    private GamePanel gamePanel;
+    private final GamePanel gamePanel;
 
-    private Ingame ingame;
-    private StartMenu startMenu;
-
+    private final Ingame ingame;
+    private final StartMenu startMenu;
+    private final Editor editor;
     public Game(){
         ingame = new Ingame(this);
         startMenu = new StartMenu(this);
+        editor = new Editor(this, ingame.getLevelHandler());
         gamePanel = new GamePanel(this);
         new GameWindow(gamePanel);
 
@@ -33,8 +35,8 @@ public class Game implements  Runnable{
     @Override
     public void run() {
 
-        double timePerFrame = (double) SEC_TO_NANO / FPS_COUNT;
-        double timePerUpdate = (double) SEC_TO_NANO / UPS_COUNT;
+        double timePerFrame =  SEC_TO_NANO / FPS_COUNT;
+        double timePerUpdate = SEC_TO_NANO / UPS_COUNT;
 
         int fpsCount = 0;
         int upsCount = 0;
@@ -81,6 +83,7 @@ public class Game implements  Runnable{
                ingame.render(g);
                 break;
             case EDITOR:
+                editor.render(g);
                 break;
         }
     }
@@ -94,6 +97,7 @@ public class Game implements  Runnable{
                 ingame.update();
                 break;
             case EDITOR:
+                editor.update();
                 break;
         }
     }
@@ -103,27 +107,7 @@ public class Game implements  Runnable{
     public StartMenu getStartMenu() {
         return startMenu;
     }
-
-    public void setState(GameState state) {
-        switch (state) {
-            case START_MENU:
-                GameState.state = state;
-                break;
-            case MENU:
-                break;
-            case INGAME:
-                if (GameState.state == GameState.EDITOR) {
-                    LEVEL_SCALE = 1.0f;
-                }
-                GameState.state = state;
-                break;
-            case EDITOR:
-                LEVEL_SCALE = 0.5f;
-                GameState.state = state;
-                break;
-            case PAUSED:
-                break;
-        }
-
+    public Editor getEditor() {
+        return editor;
     }
 }

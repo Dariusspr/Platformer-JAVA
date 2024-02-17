@@ -6,19 +6,17 @@ import main.Game;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 
-import static utils.Load.*;
 import static utils.Constants.UI.*;
 import static utils.Constants.UI.StartMenu.*;
-import static utils.Constants.Game.*;
+
 public class StartMenu extends State implements StateHandler{
 
     boolean hoverOverPlay;
     private PlayButton playButton;
     public StartMenu(Game game) {
         super(game);
-        playButton = new PlayButton( PLAYBUTTON_POSX, PLAYBUTTON_POSY, BUTTON_ANIM_WIDTH, BUTTON_ANIM_HEIGHT, PLAYBUTTON_WIDTH, PLAYBUTTON_HEIGHT);
+        playButton = new PlayButton(PLAY_BUTTON_POSX, PLAY_BUTTON_POSY, BUTTON_ANIM_WIDTH, BUTTON_ANIM_HEIGHT, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
     }
 
 
@@ -47,7 +45,7 @@ public class StartMenu extends State implements StateHandler{
     @Override
     public void mouseReleased(MouseEvent e) {
         if (hoverOverPlay) {
-            game.setState(GameState.INGAME);
+            GameState.setState(GameState.INGAME);
         }
     }
 

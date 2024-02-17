@@ -17,7 +17,7 @@ public class Player extends Entity {
     private int animationIndex = 0;
     private int animationTick = 0;
     private int playerAction;
-    private boolean movingUp, movingDown, movingLeft, movingRight;
+    private boolean movingUp, movingLeft, movingRight;
     private final String character = "MaskDude";
     private boolean flying, doubleJump;
     private float flyingSpeed = 0;
@@ -219,10 +219,6 @@ public class Player extends Entity {
 
     public void setMovingUp(boolean state) {
         this.movingUp = state;
-    }
-
-    public void setMovingDown(boolean state) {
-        this.movingDown = state;
     }
 
     public void setMovingLeft(boolean state) {

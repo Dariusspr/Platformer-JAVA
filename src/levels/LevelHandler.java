@@ -9,28 +9,36 @@ import static utils.Load.*;
 
 public class LevelHandler {
     private final String TERRAIN_IMG = "assets/Terrain/Terrain.png";
-    private final String BASIC_LEVEL_DATA = "assets/Levels/25x40Basic.csv";
-    private BufferedImage terrainImg;
+    private String LEVEL_DIRECTORY = "assets/Levels";
+    private Level[] levels;
+    private int currentLevel = 0;
     private BufferedImage[] terrainArray;
     private int offsetWidthRender = 0;
 
-    private Level levelBasic;
 
     public LevelHandler() {
-        loadImages();
-        loadSubImagesToArray();
-        loadLevelData();
+        loadElementsToArray();
+        loadAllLevels();
     }
 
-    private void loadLevelData() {
-         levelBasic = new Level(loadLevel(BASIC_LEVEL_DATA));
+    private void loadAllLevels() {
+        String[] files = loadFileNames(LEVEL_DIRECTORY);
+        levels = new Level[files.length];
+        for (int i = 0; i < files.length; i++) {
+            levels[i] = new Level(
+                    loadLevel(LEVEL_DIRECTORY+ "/" + files[i]),
+                    files[i].substring(0, files[i].lastIndexOf(".csv")),
+                    i
+                );
+        }
     }
 
-    private void loadSubImagesToArray() {
+    private void loadElementsToArray() {
         loadTerrainToArray();
     }
 
     private void loadTerrainToArray() {
+        BufferedImage terrainImg = LoadImage(TERRAIN_IMG);
         terrainArray = new BufferedImage[TERRAIN_HEIGHT * TERRAIN_WIDTH];
         for (int row = 0; row < TERRAIN_HEIGHT; row++) {
             for (int col = 0; col < TERRAIN_WIDTH; col++) {
@@ -39,19 +47,18 @@ public class LevelHandler {
         }
     }
 
-    private void  loadImages() {
-        terrainImg = LoadImage(TERRAIN_IMG);
-
-    }
-
     public void render(Graphics g) {
-        renderTerrain(g);
+        renderTerrain(g, offsetWidthRender);
     }
 
-    private void renderTerrain(Graphics g) {
+    public void renderCustomOffset(Graphics g, int offset) {
+        renderTerrain(g, offset);
+    }
+
+    private void renderTerrain(Graphics g, int offset) {
         for (int row = 0; row < TILE_ROW_COUNT; row++) {
             for (int col = 0; col < getCurrentLevelData()[0].length; col++) {
-                g.drawImage(terrainArray[levelBasic.getTile(row, col)], (int)(LEVEL_SCALE * col  * TILE_SIZE) - offsetWidthRender, (int)(LEVEL_SCALE * row  * TILE_SIZE), (int)(TILE_SIZE * LEVEL_SCALE), (int)(LEVEL_SCALE * TILE_SIZE),null);
+                g.drawImage(terrainArray[levels[currentLevel].getTile(row, col)], (int)(LEVEL_SCALE * col  * TILE_SIZE) - offset, (int)(LEVEL_SCALE * row  * TILE_SIZE), (int)(TILE_SIZE * LEVEL_SCALE), (int)(LEVEL_SCALE * TILE_SIZE),null);
             }
         }
     }
@@ -64,7 +71,27 @@ public class LevelHandler {
     }
 
     public int[][] getCurrentLevelData() {
-        return levelBasic.getLevelData();
+        return levels[currentLevel].getLevelData();
     }
 
+    public void ChangeLevel(int level) {
+        if (level < 0) {
+            currentLevel = levels.length - 1;
+        }
+        else if (level >= levels.length) {
+            currentLevel = 0;
+        }
+        else {
+            currentLevel = level;
+        }
+    }
+    public int getCurrentLevelIndex() {
+        return currentLevel;
+    }
+    public int getPlayerX() {
+        return 300;
+    }
+    public int getPlayerY() {
+        return 550;
+    }
 }
