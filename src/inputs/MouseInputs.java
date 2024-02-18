@@ -17,6 +17,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
     public void mouseClicked(MouseEvent e) {
         switch (GameState.state) {
             case MENU:
+                gamePanel.getGame().getMenu().mouseClicked(e);
                 break;
             case INGAME:
                 gamePanel.getGame().getIngame().mouseClicked(e);
@@ -32,6 +33,9 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
         switch (GameState.state) {
             case START_MENU:
                 break;
+            case MENU:
+                gamePanel.getGame().getMenu().mousePressed(e);
+                break;
             case INGAME:
                 gamePanel.getGame().getIngame().mousePressed(e);
                 break;
@@ -46,6 +50,9 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
         switch (GameState.state) {
             case START_MENU:
                 gamePanel.getGame().getStartMenu().mouseReleased(e);
+                break;
+            case MENU:
+                gamePanel.getGame().getMenu().mouseReleased(e);
                 break;
             case INGAME:
                 gamePanel.getGame().getIngame().mouseReleased(e);
@@ -68,7 +75,15 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-
+        switch (GameState.state) {
+            case START_MENU:
+                break;
+            case INGAME:
+                break;
+            case EDITOR:
+                gamePanel.getGame().getEditor().mouseDragged(e);
+                break;
+        }
     }
 
     @Override
@@ -77,6 +92,8 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
             case START_MENU:
                 gamePanel.getGame().getStartMenu().mouseMoved(e);
                 break;
+            case MENU:
+                gamePanel.getGame().getMenu().mouseMoved(e);
             case INGAME:
                 gamePanel.getGame().getIngame().mouseMoved(e);
                 break;

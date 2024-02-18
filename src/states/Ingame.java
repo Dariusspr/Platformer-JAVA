@@ -1,7 +1,6 @@
 package states;
 
 import entities.Player;
-import levels.Level;
 import levels.LevelHandler;
 import main.Game;
 import static utils.Constants.Game.*;
@@ -80,6 +79,11 @@ public class Ingame extends State implements StateHandler{
 
     @Override
     public void mouseMoved(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
 
     }
 

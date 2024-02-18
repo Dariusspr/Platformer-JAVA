@@ -9,7 +9,8 @@ import static utils.Load.*;
 
 public class LevelHandler {
     private final String TERRAIN_IMG = "assets/Terrain/Terrain.png";
-    private String LEVEL_DIRECTORY = "assets/Levels";
+    private String LEVEL_DIRECTORY = "assets/Levels/layout";
+    private String LEVEL_INFO = "assets/Levels/levelInfo.csv";
     private Level[] levels;
     private int currentLevel = 0;
     private BufferedImage[] terrainArray;
@@ -23,12 +24,14 @@ public class LevelHandler {
 
     private void loadAllLevels() {
         String[] files = loadFileNames(LEVEL_DIRECTORY);
+        float[] times = loadTimes(LEVEL_INFO);
         levels = new Level[files.length];
         for (int i = 0; i < files.length; i++) {
             levels[i] = new Level(
                     loadLevel(LEVEL_DIRECTORY+ "/" + files[i]),
                     files[i].substring(0, files[i].lastIndexOf(".csv")),
-                    i
+                    i,
+                    times[i]
                 );
         }
     }
@@ -38,7 +41,7 @@ public class LevelHandler {
     }
 
     private void loadTerrainToArray() {
-        BufferedImage terrainImg = LoadImage(TERRAIN_IMG);
+        BufferedImage terrainImg = loadImage(TERRAIN_IMG);
         terrainArray = new BufferedImage[TERRAIN_HEIGHT * TERRAIN_WIDTH];
         for (int row = 0; row < TERRAIN_HEIGHT; row++) {
             for (int col = 0; col < TERRAIN_WIDTH; col++) {
@@ -46,6 +49,7 @@ public class LevelHandler {
             }
         }
     }
+
 
     public void render(Graphics g) {
         renderTerrain(g, offsetWidthRender);
@@ -85,13 +89,16 @@ public class LevelHandler {
             currentLevel = level;
         }
     }
-    public int getCurrentLevelIndex() {
-        return currentLevel;
-    }
+    public Level getCurrentLevel() {return levels[currentLevel];}
     public int getPlayerX() {
-        return 300;
+        return 200;
     }
     public int getPlayerY() {
-        return 550;
+        return 600;
+    }
+    public Level[] getAllLevels() {return levels;}
+
+    public void setCurrentLevel(int currentLevel) {
+        this.currentLevel = currentLevel;
     }
 }

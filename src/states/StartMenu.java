@@ -45,7 +45,7 @@ public class StartMenu extends State implements StateHandler{
     @Override
     public void mouseReleased(MouseEvent e) {
         if (hoverOverPlay) {
-            GameState.setState(GameState.INGAME);
+            GameState.setState(GameState.MENU);
         }
     }
 
@@ -54,6 +54,11 @@ public class StartMenu extends State implements StateHandler{
         if((hoverOverPlay = playButton.onButton(e.getX(), e.getY()))) {
             playButton.buttonDown();
         }
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+
     }
 
     @Override

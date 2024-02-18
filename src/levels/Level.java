@@ -3,13 +3,14 @@ package levels;
 public class Level {
     private int[][] levelData;
     private String name;
-    private float recordTime;
+    private float bestTime = 0;
     int index;
 
-    public Level(int [][] levelData, String name, int index) {
+    public Level(int [][] levelData, String name, int index, float bestTime) {
         this.levelData = levelData;
         this.name = name;
         this.index = index;
+        this.bestTime = bestTime;
     }
 
     public int getTile(int row, int col) {
@@ -30,5 +31,9 @@ public class Level {
 
     public void setLevelData(int[][] newData) {
         this.levelData = newData;
+    }
+
+    public float getLevelBestTime() {
+        return bestTime;
     }
 }

@@ -1,6 +1,5 @@
 package entities;
 
-import main.Game;
 import states.Ingame;
 
 import java.awt.*;
@@ -45,7 +44,7 @@ public class Player extends Entity {
         BufferedImage[] img = new BufferedImage[PLAYER_ANIM_IMG.length];
 
         for (int i = 0; i < PLAYER_ANIM_IMG.length; i++) {
-            img[i] = LoadImage(PLAYER_ANIM_IMG[i]);
+            img[i] = loadImage(PLAYER_ANIM_IMG[i]);
         }
 
         return img;

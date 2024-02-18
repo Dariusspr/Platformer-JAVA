@@ -4,8 +4,10 @@ import states.Editor;
 import states.GameState;
 import states.Ingame;
 import states.StartMenu;
+import states.Menu;
 
 import java.awt.*;
+import java.awt.event.KeyListener;
 
 import static utils.Constants.Game.*;
 
@@ -15,9 +17,11 @@ public class Game implements  Runnable{
     private final Ingame ingame;
     private final StartMenu startMenu;
     private final Editor editor;
+    private final Menu menu;
     public Game(){
         ingame = new Ingame(this);
         startMenu = new StartMenu(this);
+        menu = new Menu(this);
         editor = new Editor(this, ingame.getLevelHandler());
         gamePanel = new GamePanel(this);
         new GameWindow(gamePanel);
@@ -79,6 +83,9 @@ public class Game implements  Runnable{
             case START_MENU:
                 startMenu.render(g);
                 break;
+            case MENU:
+                menu.render(g);
+                break;
             case INGAME:
                ingame.render(g);
                 break;
@@ -92,6 +99,9 @@ public class Game implements  Runnable{
         switch (GameState.state) {
             case START_MENU:
                 startMenu.update();
+                break;
+            case MENU:
+                menu.update();
                 break;
             case INGAME:
                 ingame.update();
@@ -109,5 +119,9 @@ public class Game implements  Runnable{
     }
     public Editor getEditor() {
         return editor;
+    }
+
+    public Menu getMenu() {
+        return menu;
     }
 }

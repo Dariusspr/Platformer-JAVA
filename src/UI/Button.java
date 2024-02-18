@@ -5,7 +5,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import static utils.Constants.UI.*;
-import static utils.Load.LoadImage;
+import static utils.Load.loadImage;
 
 public abstract class Button {
     protected int animWidth, animHeight;;
@@ -27,7 +27,7 @@ public abstract class Button {
     }
 
     private void loadAnimations(String path, int animWidth, int animHeight) {
-        BufferedImage img = LoadImage(path);
+        BufferedImage img = loadImage(path);
         animaton = new BufferedImage[BUTTON_ANIM_LENGTH];
 
         for (int i = 0; i < BUTTON_ANIM_LENGTH; i++)

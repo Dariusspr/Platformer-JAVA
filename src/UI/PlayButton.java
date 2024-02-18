@@ -1,6 +1,6 @@
 package UI;
 
-import static utils.Constants.UI.StartMenu.PLAY_BUTTON_PATH;
+import static utils.Constants.UI.PLAY_BUTTON_PATH;
 
 public class PlayButton extends Button{
 

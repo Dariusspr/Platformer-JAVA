@@ -3,13 +3,14 @@ package utils;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import static utils.Constants.LevelHandler.*;
 
 public class Load {
 
-    public static BufferedImage LoadImage(String path) {
+    public static BufferedImage loadImage(String path) {
         BufferedImage img;
         try {
             img = ImageIO.read(new File(path));
@@ -46,5 +47,21 @@ public class Load {
             throw new RuntimeException(e);
         }
         return levelData;
+    }
+
+    public static float[] loadTimes(String path) {
+        final String COMMA_DELIMITER = ",";
+        float[] times = new float[MAX_LEVEL_COUNT];
+        try {
+            Scanner scanner = new Scanner(new File(path));
+            String[] values = scanner.nextLine().split(COMMA_DELIMITER);
+            for (int i = 0; i < values.length && i < MAX_LEVEL_COUNT; i++) {
+                times[i] = Float.parseFloat(values[i]);
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return times;
     }
 }

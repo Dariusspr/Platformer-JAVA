@@ -9,10 +9,8 @@ public enum GameState {
 
     public static void setState(GameState state) {
         switch (state) {
-            case START_MENU:
+            case START_MENU, MENU:
                 GameState.state = state;
-                break;
-            case MENU:
                 break;
             case INGAME:
                 if (GameState.state == GameState.EDITOR) {
