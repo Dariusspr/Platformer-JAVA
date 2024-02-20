@@ -15,12 +15,12 @@ public abstract class Button {
 
     Rectangle2D.Float button;
 
-    protected Button(int x, int y, int animWidth, int animHeight, int width, int height, String path) {
+    protected Button(int x, int y, int width, int height, String path) {
         button = new Rectangle2D.Float();
         button.x = x;
         button.y = y;
-        this.animWidth = animWidth;
-        this.animHeight = animHeight;
+        this.animWidth = BUTTON_ANIM_WIDTH;
+        this.animHeight = BUTTON_ANIM_HEIGHT;
         button.width = width;
         button.height = height;
         loadAnimations(path, animWidth, animHeight);
@@ -47,6 +47,11 @@ public abstract class Button {
     public void buttonDown() {
         animationTick = 0;
         animationIndex = 2;
+    }
+
+    public void buttonUp() {
+        animationTick = 0;
+        animationIndex = 0;
     }
 
     private void updateAnimation() {

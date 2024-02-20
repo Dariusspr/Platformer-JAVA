@@ -2,6 +2,7 @@ package states;
 
 import UI.Banner;
 import UI.EditButton;
+import UI.ExitButton;
 import UI.PlayButton;
 import levels.Level;
 import main.Game;
@@ -10,8 +11,6 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-import static utils.Constants.UI.BUTTON_ANIM_HEIGHT;
-import static utils.Constants.UI.BUTTON_ANIM_WIDTH;
 import static utils.Constants.UI.Menu.*;
 
 
@@ -22,15 +21,17 @@ public class Menu extends State implements  StateHandler{
     private Banner[] timeBanners;
     private Banner empty;
     private int currentLevel = 0;
-    PlayButton playButton;
-    EditButton editButton;
-    private boolean hoverOnPlay, hoverOnEdit;
+    private PlayButton playButton;
+    private EditButton editButton;
+    private ExitButton exitButton;
+    private boolean onPlay, onEdit, onExit;
     public Menu(Game game) {
         super(game);
         levels = game.getIngame().getLevelHandler().getAllLevels();
         setUpBanners();
-        playButton = new PlayButton(PLAY_BUTTON_POSX, PLAY_BUTTON_POSY, BUTTON_ANIM_WIDTH, BUTTON_ANIM_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
-        editButton = new EditButton(EDIT_BUTTON_POSX, EDIT_BUTTON_POSY, BUTTON_ANIM_WIDTH, BUTTON_ANIM_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
+        playButton = new PlayButton(PLAY_BUTTON_POSX, PLAY_BUTTON_POSY, BUTTON_WIDTH, BUTTON_HEIGHT);
+        editButton = new EditButton(EDIT_BUTTON_POSX, EDIT_BUTTON_POSY, BUTTON_WIDTH, BUTTON_HEIGHT);
+        exitButton = new ExitButton(EXIT_BUTTON_POSX, EXIT_BUTTON_POSY,BUTTON_WIDTH, BUTTON_HEIGHT);
     }
 
     private void setUpBanners() {
@@ -55,15 +56,19 @@ public class Menu extends State implements  StateHandler{
 
         playButton.render(g);
         editButton.render(g);
+        exitButton.render(g);
     }
 
     @Override
     public void update() {
-        if(!hoverOnPlay) {
+        if(!onPlay) {
             playButton.update();
         }
-        if (!hoverOnEdit) {
+        if (!onEdit) {
             editButton.update();
+        }
+        if (!onExit) {
+            exitButton.update();
         }
     }
 
@@ -79,23 +84,30 @@ public class Menu extends State implements  StateHandler{
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (hoverOnPlay) {
+        if (onPlay) {
             game.getIngame().getLevelHandler().setCurrentLevel(currentLevel);
             GameState.setState(GameState.INGAME);
         }
-        if (hoverOnEdit) {
+        if (onEdit) {
             game.getIngame().getLevelHandler().setCurrentLevel(currentLevel);
             GameState.setState(GameState.EDITOR);
+            game.getIngame().getLevelHandler().getCurrentLevel().setLevelState(Level.LevelState.PAUSED);
+        }
+        if (onExit) {
+            GameState.setState(GameState.START_MENU);
         }
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if((hoverOnPlay = playButton.onButton(e.getX(), e.getY()))) {
+        if((onPlay = playButton.onButton(e.getX(), e.getY()))) {
             playButton.buttonDown();
         }
-        else if((hoverOnEdit = editButton.onButton(e.getX(), e.getY()))) {
+        else if((onEdit = editButton.onButton(e.getX(), e.getY()))) {
             editButton.buttonDown();
+        }
+        else if ((onExit = exitButton.onButton(e.getX(), e.getY()))) {
+            exitButton.buttonDown();
         }
     }
 
@@ -117,7 +129,6 @@ public class Menu extends State implements  StateHandler{
                 break;
             case KeyEvent.VK_A, KeyEvent.VK_KP_LEFT:
                 currentLevel = Math.max(currentLevel - 1, 0);
-
         }
     }
 }

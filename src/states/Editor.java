@@ -10,8 +10,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
 
-import static utils.Constants.Game.LEVEL_SCALE;
-import static utils.Constants.Game.TILE_SIZE;
+import static utils.Constants.Game.*;
 import static utils.Constants.UI.Editor.*;
 
 
@@ -33,18 +32,15 @@ public class Editor extends State implements StateHandler{
     }
     @Override
     public void render(Graphics g) {
-
-        levelHandler.renderCustomOffset(g, 0);
-        editorUI.drawGridOnLevel(g);
-        editorUI.drawBorder(g);
-        editorUI.drawTerrainElements(g);
-        editorUI.drawElemenSelector(g);
+        game.getIngame().renderCustomOffset(g, 0);
+       editorUI.render(g);
     }
 
 
     @Override
     public void update() {
         levelHandler.update();
+        game.getIngame().getPlayer().updatePosition();
         editorUI.update();
         updateCurrentLevel();
         currentElementValue = editorUI.getCurrentElementValue();
@@ -55,21 +51,32 @@ public class Editor extends State implements StateHandler{
     public void mouseClicked(MouseEvent e) {
         int mouseX = e.getX();
         int mouseY = e.getY();
-        if (SwingUtilities.isLeftMouseButton(e)) {
-            if (mouseY > editorUI.getOffsetY()) {
-                editorUI.handleMouseClick(mouseX, mouseY);
+
+        if (!editorUI.isMenu()) {
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                if (mouseY > editorUI.getOffsetY()) {
+                    editorUI.handleMouseClick(mouseX, mouseY);
+                }
+                else if (mouseY >= 0 && mouseX >= 0 && mouseX < PANEL_WIDTH){
+                    modifyCurrentLevel(mouseX, mouseY);
+                }
             }
-            else {
-                modifyCurrentLevel(mouseX, mouseY);
+            else if (SwingUtilities.isRightMouseButton(e)){
+                if (mouseY < editorUI.getOffsetY() && mouseY >= 0 && mouseX >= 0 && mouseX < PANEL_WIDTH) {
+                    currentElementType = 0;
+                    currentElementValue = EDITOR_ERASE_VALUE;
+                    modifyCurrentLevel(mouseX, mouseY);
+                }
             }
         }
-        else if (SwingUtilities.isRightMouseButton(e)){
-            if (mouseY < editorUI.getOffsetY()) {
-                currentElementType = 0;
-                currentElementValue = EDITOR_ERASE_VALUE;
-                modifyCurrentLevel(mouseX, mouseY);
+        else {
+            if (editorUI.onExit) {
+               GameState.setState(GameState.MENU);
             }
-        }
+            else if (editorUI.onSave) {
+
+            }
+         }
     }
 
     @Override
@@ -84,7 +91,10 @@ public class Editor extends State implements StateHandler{
 
     @Override
     public void mouseMoved(MouseEvent e) {
-
+        if (editorUI.isMenu()) {
+            editorUI.onSave = editorUI.saveButton.onButton(e.getX(), e.getY());
+            editorUI.onExit = editorUI.exitButton.onButton(e.getX(), e.getY());
+        }
     }
 
 
@@ -95,11 +105,11 @@ public class Editor extends State implements StateHandler{
         if (SwingUtilities.isLeftMouseButton(e)) {
             if (mouseY > editorUI.getOffsetY()) {
                 editorUI.handleMouseClick(mouseX, mouseY);
-            } else {
+            } else if (mouseY >= 0 && mouseX >= 0 && mouseX < PANEL_WIDTH){
                 modifyCurrentLevel(mouseX, mouseY);
             }
         } else if (SwingUtilities.isRightMouseButton(e)) {
-            if (mouseY < editorUI.getOffsetY()) {
+            if (mouseY < editorUI.getOffsetY() && mouseY >= 0 && mouseX >= 0 && mouseX < PANEL_WIDTH) {
                 currentElementType = 0;
                 currentElementValue = EDITOR_ERASE_VALUE;
                 modifyCurrentLevel(mouseX, mouseY);
@@ -115,15 +125,24 @@ public class Editor extends State implements StateHandler{
     @Override
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_F1: {
+            case KeyEvent.VK_F1:
                 GameState.setState(GameState.INGAME);
+                game.getIngame().setLastTimeCheck();
+                levelHandler.getCurrentLevel().setLevelState(Level.LevelState.OTHER);
                 break;
-            }
+            case KeyEvent.VK_ESCAPE:
+                if (editorUI.isMenu()) {
+                    editorUI.setMenu(false);
+                }
+                else {
+                    editorUI.setMenu(true);
+                }
+                break;
         }
     }
 
     private void modifyCurrentLevel(int mouseX, int mouseY) {
-        int[][] data = currentLevel.getLevelData();
+        int[][] data = currentLevel.getTerrainData();
 
         int col = (int) (mouseX / (TILE_SIZE * LEVEL_SCALE));
         int row = (int) (mouseY / (TILE_SIZE * LEVEL_SCALE));

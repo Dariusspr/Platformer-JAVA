@@ -27,12 +27,34 @@ public class Constants {
         public static final int LEFT_DIRECTION = -1;
         public static final int RIGHT_DIRECTION = 1;
 
-        public static void changeGameScale(float scale) {
-            LEVEL_SCALE = scale;
-        }
+
     }
     public static class GameWindow {
         public static final String WINDOW_NAME = "Platformer";
+    }
+
+    public static class Fruit {
+        public enum Fruits {
+            APPLE, BANANA, CHERRY, STRAWBERRY;
+        }
+        //public static final int FRUIT_COUNT = 4;
+        public static final int FRUIT_COUNT = 1;
+        public static final int MAX_FRUIT_COUNT = 10;
+
+        public static final int FRUIT_ANIM_SIZE = 32;
+        public static final int FRUIT_ANIMATION_SPEED = 13;
+        public static final int FRUIT_ANIMATION_LENGTH = 12;
+        public static final float FRUIT_SCALE = 2.0f;
+        public static final int FRUIT_SIZE = (int) (FRUIT_ANIM_SIZE * FRUIT_SCALE * GAME_SCALE);
+        public static final int FRUIT_HITBOX_WIDTH = (int) (FRUIT_SIZE * 0.4);
+        public static final int FRUIT_HITBOX_HEIGHT= (int) (FRUIT_SIZE * 0.35);
+        public static final int FRUIT_WIDTH_OFFSET = (FRUIT_SIZE - FRUIT_HITBOX_WIDTH) / 2;
+        public static final int FRUIT_HEIGHT_OFFSET = (int) (FRUIT_SIZE - FRUIT_HITBOX_HEIGHT * 2.0f);
+
+        public static final int APPLE_POINTS = 5;
+        public static final int BANANA_POINTS = 10;
+        public static final int CHERRY_POINTS = 10;
+        public static final int STRAWBERRY_POINTS = 10;
     }
 
     public static class Player {
@@ -82,6 +104,9 @@ public class Constants {
 
         public static int TERRAIN_WIDTH = 17; // TILES
         public static int TERRAIN_HEIGHT = 7; // TILES
+        public static final int BACKGROUND_SIZE = 5760;
+
+
     }
 
     public static class UI {
@@ -94,14 +119,30 @@ public class Constants {
 
         public static final String PLAY_BUTTON_PATH = "assets/Buttons/PlayButton.png";
         public static final String EDIT_BUTTON_PATH =  "assets/Buttons/EditButton.png";
+        public static final String EXIT_BUTTON_PATH =  "assets/Buttons/ExitButton.png";
+        public static final String RESTART_BUTTON_PATH =  "assets/Buttons/RestartButton.png";
+        public static final String SAVE_BUTTON_PATH =  "assets/Buttons/SaveButton.png";
+
+        public static class Text {
+            public static int HEIGHT = 10;
+            public static int WIDTH = 8;
+            public static int ROW_COUNT = 5;
+            public static int COL_COUNT = 10;
+            public static int SYMBOL_COUNT = 46;
+            public static String TEXT_IMG_BLACK = "assets/Menu/Text/Text (Black) (8x10).png";
+            public static String TEXT_IMG_WHITE = "assets/Menu/Text/Text (White) (8x10).png";
+        }
 
        public static class StartMenu {
 
 
-           public static int PLAY_BUTTON_HEIGHT = (int) BUTTON_INIT_HEIGHT * 2;
-           public static int PLAY_BUTTON_WIDTH = (int) BUTTON_INIT_WIDTH * 2;
+           public static int STARTMENU_BUTTON_HEIGHT = (int) BUTTON_INIT_HEIGHT * 2;
+           public static int STARTMENU_BUTTON_WIDTH = (int) BUTTON_INIT_WIDTH * 2;
            public static int PLAY_BUTTON_POSX = (int) (PANEL_WIDTH * 0.4f);
-           public static int PLAY_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.4f);
+           public static int PLAY_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.3f);
+
+           public static int EXIT_BUTTON_POSX = (int) (PANEL_WIDTH * 0.4f);
+           public static int EXIT_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.5f);
        }
        public static class Editor {
            public static final int EDITOR_ERASE_VALUE = 84;
@@ -122,6 +163,15 @@ public class Constants {
            public static final int TERRAIN_SELECTOR_OFFSET = (int) (3 * GAME_SCALE);
 
            public static final int SELECTOR_SPEED = 36;
+
+           public static int BUTTON_HEIGHT = (int) BUTTON_INIT_HEIGHT * 2;
+           public static int BUTTON_WIDTH = (int) BUTTON_INIT_WIDTH * 2;
+
+           public static int SAVE_BUTTON_POSX = (int) (PANEL_WIDTH * 0.4f);
+           public static int SAVE_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.3f);
+
+           public static int EXIT_BUTTON_POSX = (int) (PANEL_WIDTH * 0.4f);
+           public static int EXIT_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.4f);
        }
 
        public static class Menu {
@@ -138,11 +188,31 @@ public class Constants {
 
            public static int BUTTON_HEIGHT = (int) BUTTON_INIT_HEIGHT * 2;
            public static int BUTTON_WIDTH = (int) BUTTON_INIT_WIDTH * 2;
-           public static int PLAY_BUTTON_POSX = (int) (PANEL_WIDTH * 0.2f);
+           public static int PLAY_BUTTON_POSX = (int) (PANEL_WIDTH * 0.3f);
            public static int PLAY_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.6f);
 
-           public static int EDIT_BUTTON_POSX = (int) (PANEL_WIDTH * 0.6f);
+           public static int EDIT_BUTTON_POSX = (int) (PANEL_WIDTH * 0.5f);
            public static int EDIT_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.6f);
+
+           public static int EXIT_BUTTON_POSX = (int) (PANEL_WIDTH * 0.4f);
+           public static int EXIT_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.8f);
+       }
+
+
+
+       public static class Pause {
+           public static int BUTTON_HEIGHT = (int) (BUTTON_INIT_HEIGHT * 1.5f);
+           public static int BUTTON_WIDTH = (int) (BUTTON_INIT_WIDTH * 1.5f);
+
+           public static int SAVE_BUTTON_POSX = (int) (PANEL_WIDTH * 0.4f);
+           public static int SAVE_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.3f);
+
+           public static int RESTART_BUTTON_POSX = (int) (PANEL_WIDTH * 0.4f);
+           public static int RESTART_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.4f);
+
+           public static int EXIT_BUTTON_POSX = (int) (PANEL_WIDTH * 0.4f);
+           public static int EXIT_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.5f);
+
        }
     }
 }

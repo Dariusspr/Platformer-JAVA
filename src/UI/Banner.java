@@ -10,15 +10,15 @@ public class Banner {
     private BufferedImage bannerImg;
     private int x, y;
     private int width, height;
-    String text;
-    public Banner(String text, int x, int y, int width, int height) {
+    Text text;
+    public Banner(String rawText, int x, int y, int width, int height) {
         this.x =x;
         this.y = y;
-        this.text = text;
         this.width = width;
         this.height = height;
 
         bannerImg = loadImage(BANNER_IMG);
+        text = new Text(rawText, (int) (width * 0.05f), (int) (x + 0.5f * width), y + height / 2, 'b');
     }
 
     public void render(Graphics g) {
@@ -27,6 +27,7 @@ public class Banner {
         g.setFont(newFont);
 
         g.drawImage(bannerImg, x, y, width, height, null);
-        g.drawString(text, x + width / 2 - 50, y + height / 2); // TODO: text from img alpha
+        text.render(g);
+        //g.drawString(rawText, x + width / 2 - 50, y + height / 2); // TODO: text from img alpha
     }
 }

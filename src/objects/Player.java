@@ -1,5 +1,6 @@
-package entities;
+package objects;
 
+import levels.Level;
 import states.Ingame;
 
 import java.awt.*;
@@ -9,7 +10,7 @@ import java.awt.image.BufferedImage;
 import static utils.Constants.Game.*;
 import static utils.Constants.Player.*;
 import static utils.Load.*;
-import static entities.Collision.*;
+import static objects.Collision.*;
 
 public class Player extends Entity {
     private BufferedImage[][] animations;
@@ -24,10 +25,8 @@ public class Player extends Entity {
 
     private final Ingame ingame;
 
-    public Player(float x, float y, int width, int height, float speed,
-                  int hitBoxWidth, int hitboxHeight, int offsetWidth, int offsetHeight,
-                  Ingame ingame) {
-        super(x, y, width, height, speed, hitBoxWidth, hitboxHeight, offsetWidth, offsetHeight);
+    public Player(float x, float y, Ingame ingame) {
+        super(x, y, PLAYER_SIZE, PLAYER_SIZE, PLAYER_HITBOX_WIDTH, PLAYER_HITBOX_HEIGHT, PLAYER_WIDTH_OFFSET, PLAYER_HEIGHT_OFFSET);
         this.ingame = ingame;
         loadAnimations();
         setAction(PLAYER_IDLE);
@@ -69,19 +68,18 @@ public class Player extends Entity {
     }
 
     public void update() {
-        updatePosition();
-        updateAction();
-        updateAnimation();
+            updatePosition();
+            updateAction();
+            updateAnimation();
     }
 
 
     public void render(Graphics g) {
-        if (playerAction >= PLAYER_APPEAR) {
-            // TODO: appear/disapper animation
-        }
-        else {
-            super.render(animations[playerAction][animationIndex], g);
-        }
+        super.render(animations[playerAction][animationIndex], g);
+    }
+
+    public void renderCustomOffset(Graphics g, int offset) {
+            super.renderCustomOffset(animations[playerAction][animationIndex], g, offset);
     }
 
     public void updatePosition() {
@@ -97,7 +95,7 @@ public class Player extends Entity {
     private void jump() {
         if (flying && flyingSpeed <= 0 && !doubleJump) {
             doubleJump = true;
-            flyingSpeed = (float) (PLAYER_JUMP_SPEED * 0.8f);
+            flyingSpeed = PLAYER_JUMP_SPEED * 0.8f;
             return;
         }
         if (flying) {
@@ -113,7 +111,7 @@ public class Player extends Entity {
         Rectangle2D.Float hitbox = getHitbox();
 
         if (!flying) {
-            if (canMoveDown(hitbox, 0.1f, ingame.getLevelHandler().getCurrentLevelData())) {
+            if (canMoveDown(hitbox, 0.1f, ingame.getLevelHandler().getCurrentLevelTerrain())) {
                 flying = true;
                 flyingSpeed = -0.1f;
             }
@@ -123,7 +121,7 @@ public class Player extends Entity {
         }
 
         if (flyingSpeed > 0) {
-            if (movingUp && canMoveUp(hitbox, flyingSpeed, ingame.getLevelHandler().getCurrentLevelData())) {
+            if (movingUp && canMoveUp(hitbox, flyingSpeed, ingame.getLevelHandler().getCurrentLevelTerrain())) {
                 y -= flyingSpeed;
                 flyingSpeed -= GRAVITY;
             }
@@ -136,7 +134,7 @@ public class Player extends Entity {
             }
         }
         else {
-            if (canMoveDown(hitbox, -flyingSpeed, ingame.getLevelHandler().getCurrentLevelData())) {
+            if (canMoveDown(hitbox, -flyingSpeed, ingame.getLevelHandler().getCurrentLevelTerrain())) {
                 y -= flyingSpeed;
                 flyingSpeed -= GRAVITY;
             }
@@ -156,7 +154,7 @@ public class Player extends Entity {
         float y = getY();
         Rectangle2D.Float hitbox = getHitbox();
         if (movingLeft && !movingRight) {
-            if (canMoveLeft(hitbox, PLAYER_MOVE_SPEED, ingame.getLevelHandler().getCurrentLevelData())){
+            if (canMoveLeft(hitbox, PLAYER_MOVE_SPEED, ingame.getLevelHandler().getCurrentLevelTerrain())){
                 x -= PLAYER_MOVE_SPEED;
             }
             else {
@@ -166,7 +164,7 @@ public class Player extends Entity {
         }
 
         if (movingRight && !movingLeft) {
-            if (canMoveRight(hitbox, PLAYER_MOVE_SPEED, ingame.getLevelHandler().getCurrentLevelData())) {
+            if (canMoveRight(hitbox, PLAYER_MOVE_SPEED, ingame.getLevelHandler().getCurrentLevelTerrain())) {
                 x += PLAYER_MOVE_SPEED;
             }
             else {
@@ -226,5 +224,18 @@ public class Player extends Entity {
 
     public void setMovingRight(boolean state) {
         this.movingRight = state;
+    }
+
+    public void reset() {
+        super.reset();
+        movingLeft = false;
+        movingRight = false;
+        movingUp = false;
+        flying = false;
+        doubleJump = false;
+        flyingSpeed = 0;
+        animationIndex = 0;
+        animationTick = 0;
+        playerAction = PLAYER_IDLE;
     }
 }

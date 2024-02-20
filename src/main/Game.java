@@ -43,7 +43,6 @@ public class Game implements  Runnable{
         double timePerUpdate = SEC_TO_NANO / UPS_COUNT;
 
         int fpsCount = 0;
-        int upsCount = 0;
 
         long previousTime =  System.nanoTime();
         long currentTime;
@@ -60,7 +59,6 @@ public class Game implements  Runnable{
 
             if (deltaUps >= 1.0) { // 1 update
                 deltaUps--;
-                upsCount++;
                 update();
             }
             if (deltaFps >= 1.0) { // 1 frame
@@ -70,10 +68,9 @@ public class Game implements  Runnable{
             }
 
             if (currentTime - lastSecTime >= SEC_TO_NANO) {
-                System.out.println("FPS: " + fpsCount + " UPS: " + upsCount);
+                System.out.println("FPS: " + fpsCount);
                 lastSecTime = currentTime;
                 fpsCount = 0;
-                upsCount = 0;
             }
         }
     }
@@ -104,6 +101,10 @@ public class Game implements  Runnable{
                 menu.update();
                 break;
             case INGAME:
+                if (GameState.changed) {
+                    ingame.restartLevel();
+                    GameState.changed = false;
+                }
                 ingame.update();
                 break;
             case EDITOR:
@@ -120,7 +121,6 @@ public class Game implements  Runnable{
     public Editor getEditor() {
         return editor;
     }
-
     public Menu getMenu() {
         return menu;
     }

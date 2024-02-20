@@ -1,24 +1,41 @@
 package levels;
 
 public class Level {
-    private int[][] levelData;
+    private int[][] terrainData;
+    private int[][] fruitData;
+    private int[] fruitCount;
     private String name;
     private float bestTime = 0;
-    int index;
+    private int index;
 
-    public Level(int [][] levelData, String name, int index, float bestTime) {
-        this.levelData = levelData;
-        this.name = name;
-        this.index = index;
-        this.bestTime = bestTime;
+    public enum LevelState {
+        WON, LOST, PAUSED, OTHER;
+    }
+
+    LevelState levelState = LevelState.OTHER;
+    public int getTotalFruitCount() {
+        int total = 0;
+        for (int i = 0; i < fruitCount.length; i++) {
+            total += fruitCount[i];
+        }
+        return total;
+    }
+
+
+    public LevelState getLevelState() {
+        return levelState;
+    }
+
+    public void setLevelState(LevelState state) {
+        this.levelState =  state;
     }
 
     public int getTile(int row, int col) {
-        return levelData[row][col];
+        return terrainData[row][col];
     }
 
-    public int[][] getLevelData() {
-        return levelData;
+    public int[][] getTerrainData() {
+        return terrainData;
     }
 
     public String getLevelName() {
@@ -29,11 +46,40 @@ public class Level {
         return index;
     }
 
-    public void setLevelData(int[][] newData) {
-        this.levelData = newData;
+    public void setTerrainData(int[][] newData) {
+        this.terrainData = newData;
     }
 
     public float getLevelBestTime() {
         return bestTime;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public void setBestTime(float time) {
+        this.bestTime = time;
+    }
+
+    public void setFruitData(int[][] fruitData) {
+        this.fruitData = fruitData;
+    }
+
+    public void setFruitCount(int[] fruitCount) {
+        this.fruitCount = fruitCount;
+    }
+
+    public int[] getFruitData(int type) {
+        return fruitData[type];
+    }
+
+    public int getFruitCount(int type) {
+        return fruitCount[type];
+    }
+
 }

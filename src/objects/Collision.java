@@ -1,4 +1,4 @@
-package entities;
+package objects;
 
 import java.awt.geom.Rectangle2D;
 import static utils.Constants.Game.*;
@@ -22,6 +22,11 @@ public class Collision {
         return !(isTerrain(hitbox.x, hitbox.y + hitbox.height + speed, levelData) || isTerrain(hitbox.x + hitbox.width / 2, hitbox.y + hitbox.height + speed, levelData) || isTerrain(hitbox.x + hitbox.width, hitbox.y + hitbox.height + speed, levelData)) &&
                 (isPlatform(hitbox.x, hitbox.y + hitbox.height + speed, levelData) && isPlatform(hitbox.x + hitbox.width / 2, hitbox.y + hitbox.height + speed, levelData) && isPlatform(hitbox.x + hitbox.width, hitbox.y + hitbox.height + speed, levelData));
     }
+
+    public static boolean objectsCollide(Rectangle2D.Float hitbox1, Rectangle2D.Float hitbox2) {
+        return (hitbox1.intersects(hitbox2));
+    }
+
 
     private static boolean isTerrain(float x, float y, int[][] levelData) {
         int levelEndX = levelData[0].length * TILE_SIZE;
