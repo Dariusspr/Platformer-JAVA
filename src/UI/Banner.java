@@ -21,6 +21,10 @@ public class Banner {
         text = new Text(rawText, (int) (width * 0.05f), (int) (x + 0.5f * width), y + height / 2, 'b');
     }
 
+    public void changeBannerText(String text) {
+        this.text.updateText(text);
+    }
+
     public void render(Graphics g) {
         Font currentFont = g.getFont();
         Font newFont = currentFont.deriveFont(currentFont.getSize() * 2F);

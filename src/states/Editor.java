@@ -52,7 +52,7 @@ public class Editor extends State implements StateHandler{
         int mouseX = e.getX();
         int mouseY = e.getY();
 
-        if (!editorUI.isMenu()) {
+        if (!editorUI.isInMenu()) {
             if (SwingUtilities.isLeftMouseButton(e)) {
                 if (mouseY > editorUI.getOffsetY()) {
                     editorUI.handleMouseClick(mouseX, mouseY);
@@ -91,7 +91,7 @@ public class Editor extends State implements StateHandler{
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if (editorUI.isMenu()) {
+        if (editorUI.isInMenu()) {
             editorUI.onSave = editorUI.saveButton.onButton(e.getX(), e.getY());
             editorUI.onExit = editorUI.exitButton.onButton(e.getX(), e.getY());
         }
@@ -131,11 +131,11 @@ public class Editor extends State implements StateHandler{
                 levelHandler.getCurrentLevel().setLevelState(Level.LevelState.OTHER);
                 break;
             case KeyEvent.VK_ESCAPE:
-                if (editorUI.isMenu()) {
-                    editorUI.setMenu(false);
+                if (editorUI.isInMenu()) {
+                    editorUI.setInMenu(false);
                 }
                 else {
-                    editorUI.setMenu(true);
+                    editorUI.setInMenu(true);
                 }
                 break;
         }

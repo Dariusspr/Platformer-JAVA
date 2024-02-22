@@ -6,6 +6,7 @@ import states.Ingame;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+import static objects.Collision.hitSpike;
 import static objects.Collision.objectsCollide;
 import static utils.Constants.Fruit.*;
 import static utils.Constants.Game.*;
@@ -16,27 +17,30 @@ import static utils.Load.*;
 public class LevelHandler {
     private final Ingame ingame;
     private final String TERRAIN_IMG = "assets/Terrain/Terrain.png";
-    private String LEVEL_DIRECTORY = "assets/Levels/layout";
     private String LEVEL_INFO = "assets/Levels/levelInfo.csv";
     private String BACKGROUND_IMG = "assets/Background/background_blue.png";
     private BufferedImage background;
     private Level[] levels;
     private int currentLevel = 0;
     private BufferedImage[] terrainArray;
-    private int offsetWidthRender = 0;
+    private int renderOffsetX = 0;
 
     private int totalFruitCount;
     private int currentFruitCount;
 
     private Apple[] apples;
 
+    int levelCount;
+
     public LevelHandler(Ingame ingame) {
         this.ingame = ingame;
-        loadTerrainToArray();
+
+        background = loadImage(BACKGROUND_IMG);
+        loadTerrainImgs();
+
         loadAllLevels();
         loadFruits();
-       currentFruitCount = totalFruitCount = levels[currentLevel].getTotalFruitCount();
-       background = loadImage(BACKGROUND_IMG);
+        currentFruitCount = totalFruitCount = levels[currentLevel].getFruitCount();
     }
 
     private void loadFruits() {
@@ -44,20 +48,17 @@ public class LevelHandler {
     }
 
     private void loadAllLevels() {
-        String[] files = loadFileNames(LEVEL_DIRECTORY);
-        float[] times = loadTimes(LEVEL_INFO);
-        levels = new Level[files.length];
-
-        for (int i = 0; i < files.length; i++) {
-            levels[i] = loadLevelData(LEVEL_DIRECTORY+ "/" + files[i]);
-            levels[i].setName(files[i].substring(0, files[i].lastIndexOf(".csv")));
+        String[] files = loadFileNames();
+        levels = new Level[MAX_LEVEL_COUNT];
+        levelCount = files.length;
+        for (int i = 0; i < files.length && i < MAX_LEVEL_COUNT; i++) {
+            levels[i] = loadLevelData(files[i]);
             levels[i].setIndex(i);
-            levels[i].setBestTime(times[i]);
         }
     }
 
     // TERRAIN STUFF
-    private void loadTerrainToArray() {
+    private void loadTerrainImgs() {
         BufferedImage terrainImg = loadImage(TERRAIN_IMG);
         terrainArray = new BufferedImage[TERRAIN_HEIGHT * TERRAIN_WIDTH];
         for (int row = 0; row < TERRAIN_HEIGHT; row++) {
@@ -92,24 +93,24 @@ public class LevelHandler {
     private void renderApplesCustomOffset(Graphics g, int offset) {
         for (int i = 0; i < apples.length; i++) {
             if (apples[i] != null) {
-                apples[i].renderCustomOffset(g, offset);
+                apples[i].render(g, offset);
             }
         }
     }
 
     public void render(Graphics g) {
-        g.drawImage(background, 0 - offsetWidthRender, 0, BACKGROUND_SIZE, BACKGROUND_SIZE, null);
-        renderTerrain(g, offsetWidthRender);
+        g.drawImage(background, 0 - renderOffsetX, 0, BACKGROUND_SIZE, BACKGROUND_SIZE, null);
+        renderTerrain(g, renderOffsetX);
         renderFruits(g);
     }
 
-    public void renderCustomOffset(Graphics g, int offset) {
+    public void render(Graphics g, int offset) {
         renderTerrain(g, offset);
         renderApplesCustomOffset(g, offset);
     }
 
-    public void setOffsetRender(int x) {
-        offsetWidthRender = x;
+    public void setRenderOffset(int x) {
+        renderOffsetX = x;
     }
 
     public void update() {
@@ -117,12 +118,14 @@ public class LevelHandler {
             updateApples();
             updateLevelState();
         }
-
     }
 
     private void updateLevelState() {
         if (currentFruitCount == 0) {
             levels[currentLevel].setLevelState(Level.LevelState.WON);
+        }
+        if (hitSpike(ingame.getPlayer().getHitbox(), getCurrentLevelTerrain())) {
+            levels[currentLevel].setLevelState(Level.LevelState.LOST);
         }
     }
 
@@ -156,16 +159,14 @@ public class LevelHandler {
         this.currentLevel = currentLevel;
     }
 
-    // TODO: load copy for all fruits, and timer, add pause, and win/lose, add spikes, ability to go back to menu, reset
-
     public void loadApples() {
         Apple tmp = new Apple(0, 0);
         tmp.loadAnimations();
         BufferedImage[] animations = tmp.getAnimations();
 
         apples = new Apple[MAX_FRUIT_COUNT];
-        int[] appleData = levels[currentLevel].getFruitData(Fruits.APPLE.ordinal());
-        for (int i = 0; i < levels[currentLevel].getFruitCount(Fruits.APPLE.ordinal()); i++) {
+        int[] appleData = levels[currentLevel].getFruitData();
+        for (int i = 0; i < levels[currentLevel].getFruitCount(); i++) {
             apples[i] = new Apple(appleData[i], appleData[i + 1]);
             apples[i].setAnimations(animations);
         }
@@ -180,7 +181,7 @@ public class LevelHandler {
                 }
                 else {
                     apples[i].update();
-                    apples[i].setOffsetRender(offsetWidthRender);
+                    apples[i].setOffsetRender(renderOffsetX);
                 }
             }
         }
@@ -189,7 +190,6 @@ public class LevelHandler {
         for (int i = 0; i < apples.length; i++) {
             if (apples[i] != null && !apples[i].isCollectable()) {
                 apples[i].setCollectable();
-                System.out.println("S");
             }
         }
     }
@@ -203,5 +203,9 @@ public class LevelHandler {
     public void updateLevelBestTime(float time) {
         if (time < getCurrentLevel().getLevelBestTime())
             getCurrentLevel().setBestTime(time);
+    }
+
+    public int getLevelCount() {
+        return levelCount;
     }
 }

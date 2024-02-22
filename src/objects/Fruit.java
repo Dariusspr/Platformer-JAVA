@@ -7,16 +7,14 @@ import java.awt.image.BufferedImage;
 import static utils.Constants.Fruit.*;
 import static utils.Load.loadImage;
 
-public abstract class Fruit extends Entity{
-    private int points;
+public abstract class Fruit extends Object {
     private boolean exists = true;
     private int animationIndex = 0;
     private int animationTick = 0;
     private BufferedImage[] animations;
 
-    protected Fruit(float x, float y, int points) {
+    protected Fruit(float x, float y) {
         super(x, y, FRUIT_SIZE, FRUIT_SIZE, FRUIT_HITBOX_WIDTH, FRUIT_HITBOX_HEIGHT, FRUIT_WIDTH_OFFSET, FRUIT_HEIGHT_OFFSET);
-        initFruit(points);
     }
 
     protected void loadAnimations(String path) {
@@ -42,13 +40,8 @@ public abstract class Fruit extends Entity{
             super.render(animations[animationIndex], g);
         }
     }
-
-    public void renderCustomOffset(Graphics g, int offset) {
+    public void render(Graphics g, int offset) {
         super.renderCustomOffset(animations[animationIndex], g, offset);
-    }
-
-    private void initFruit(int points) {
-        this.points = points;
     }
 
     public void setCollected() {

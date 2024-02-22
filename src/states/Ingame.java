@@ -58,8 +58,8 @@ public class Ingame extends State implements StateHandler{
     }
 
     public void renderCustomOffset(Graphics g, int offset) {
-        levelHandler.renderCustomOffset(g, offset);
-        player.renderCustomOffset(g, offset);
+        levelHandler.render(g, offset);
+        player.render(g, offset);
     }
 
     public void setLastTimeCheck() {
@@ -71,7 +71,6 @@ public class Ingame extends State implements StateHandler{
         levelHandler.resetLevel();
         currentTime = 0.0f;
         lastTimeCheck = System.currentTimeMillis();
-        System.out.println(lastTimeCheck);
     }
 
     @Override
@@ -129,7 +128,7 @@ public class Ingame extends State implements StateHandler{
         }
 
         player.setOffsetRender(offsetWidthRender);
-        levelHandler.setOffsetRender(offsetWidthRender);
+        levelHandler.setRenderOffset(offsetWidthRender);
     }
 
 

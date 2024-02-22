@@ -1,6 +1,5 @@
 package objects;
 
-import levels.Level;
 import states.Ingame;
 
 import java.awt.*;
@@ -12,7 +11,7 @@ import static utils.Constants.Player.*;
 import static utils.Load.*;
 import static objects.Collision.*;
 
-public class Player extends Entity {
+public class Player extends Object {
     private BufferedImage[][] animations;
     private int animationIndex = 0;
     private int animationTick = 0;
@@ -78,7 +77,7 @@ public class Player extends Entity {
         super.render(animations[playerAction][animationIndex], g);
     }
 
-    public void renderCustomOffset(Graphics g, int offset) {
+    public void render(Graphics g, int offset) {
             super.renderCustomOffset(animations[playerAction][animationIndex], g, offset);
     }
 

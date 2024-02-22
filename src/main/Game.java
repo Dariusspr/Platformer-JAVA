@@ -98,6 +98,10 @@ public class Game implements  Runnable{
                 startMenu.update();
                 break;
             case MENU:
+                if (GameState.changed) {
+                    menu.updateInfo();
+                    GameState.changed = false;
+                }
                 menu.update();
                 break;
             case INGAME:

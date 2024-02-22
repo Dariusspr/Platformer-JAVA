@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 
 import static utils.Constants.Game.LEVEL_SCALE;
 
-public abstract class Entity {
+public abstract class Object {
     private float x, y;
     private float initX, initY;
     private int offsetWidthRender = 0;
@@ -15,7 +15,7 @@ public abstract class Entity {
     private Rectangle2D.Float hitbox;
     private int direction = 1;
 
-    protected Entity(float x, float y, int width, int height, int hitboxWidth, int hiboxHeight, int offsetWidthHitbox, int offsetHeightHitbox) {
+    protected Object(float x, float y, int width, int height, int hitboxWidth, int hiboxHeight, int offsetWidthHitbox, int offsetHeightHitbox) {
         initEntity(x, y, width, height);
         initHitbox(x, y, hitboxWidth, hiboxHeight, offsetWidthHitbox, offsetHeightHitbox);
     }

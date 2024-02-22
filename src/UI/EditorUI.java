@@ -1,7 +1,5 @@
 package UI;
 
-import utils.Save;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -26,8 +24,8 @@ public class EditorUI {
     private int currentElementType = 0;
     private int currentElementValue = 0;
 
-    private int selectorPosX = offsetX + EDITOR_BORDER_WIDTH;
-    private int selectorPosY = offsetY + EDITOR_BORDER_WIDTH;
+    private int selectorPosX = offsetX + EDITOR_BORDER_THICKNESS;
+    private int selectorPosY = offsetY + EDITOR_BORDER_THICKNESS;
 
     private int terrainTileWidth = (int) (GAME_SCALE * TERRAIN_IMG_WIDTH / TERRAIN_COL_COUNT);
     private int terrainTileHeight = (int) (GAME_SCALE * TERRAIN_IMG_HEIGHT / TERRAIN_ROW_COUNT);
@@ -44,34 +42,33 @@ public class EditorUI {
         saveButton = new SaveButton(SAVE_BUTTON_POSX, SAVE_BUTTON_POSY, BUTTON_WIDTH, BUTTON_HEIGHT);
     }
 
-
-
     private void loadImages() {
         gridImg = loadImage(GRID_IMG);
         terrainImg = loadImage(TERRAIN_IMG);
     }
 
-    public void setMenu(boolean state) {
-        inMenu = state;
-    }
-
-    public boolean isMenu() {
-        return inMenu;
-    }
     private void loadAnimations() {
         selectorAnimation = loadSelectorAnimation();
     }
 
-    public void render(Graphics  g) {
+    public void setInMenu(boolean state) {
+        inMenu = state;
+    }
+
+    public boolean isInMenu() {
+        return inMenu;
+    }
+
+    public void render(Graphics g) {
         drawGridOnLevel(g);
         drawBorder(g);
         drawTerrainElements(g);
         drawElemenSelector(g);
+
         if (inMenu) {
             saveButton.render(g);
             exitButton.render(g);
         }
-
     }
 
     public void update() {
@@ -104,11 +101,11 @@ public class EditorUI {
 
 
     public void drawBorder(Graphics g) {
-        g.fillRect(0, PANEL_HEIGHT / 2, PANEL_WIDTH , EDITOR_BORDER_WIDTH);
-        g.fillRect(0, PANEL_HEIGHT / 2, EDITOR_BORDER_WIDTH , PANEL_HEIGHT / 2);
+        g.fillRect(0, PANEL_HEIGHT / 2, PANEL_WIDTH , EDITOR_BORDER_THICKNESS);
+        g.fillRect(0, PANEL_HEIGHT / 2, EDITOR_BORDER_THICKNESS, PANEL_HEIGHT / 2);
 
-        g.fillRect(0, PANEL_HEIGHT - EDITOR_BORDER_WIDTH, PANEL_WIDTH , EDITOR_BORDER_WIDTH);
-        g.fillRect(PANEL_WIDTH - EDITOR_BORDER_WIDTH, PANEL_HEIGHT / 2, EDITOR_BORDER_WIDTH , PANEL_HEIGHT / 2);
+        g.fillRect(0, PANEL_HEIGHT - EDITOR_BORDER_THICKNESS, PANEL_WIDTH , EDITOR_BORDER_THICKNESS);
+        g.fillRect(PANEL_WIDTH - EDITOR_BORDER_THICKNESS, PANEL_HEIGHT / 2, EDITOR_BORDER_THICKNESS, PANEL_HEIGHT / 2);
     }
 
     public void drawGridOnLevel(Graphics g){
@@ -120,12 +117,12 @@ public class EditorUI {
     }
 
     public void handleMouseClick(int x, int y) {
-            if (x < offsetX + EDITOR_BORDER_WIDTH || y < offsetY + EDITOR_BORDER_WIDTH )
+            if (x < offsetX + EDITOR_BORDER_THICKNESS || y < offsetY + EDITOR_BORDER_THICKNESS)
                 return;
 
-            if (x < offsetX + EDITOR_BORDER_WIDTH + (GAME_SCALE * TERRAIN_IMG_WIDTH)  && y < offsetY + EDITOR_BORDER_WIDTH + (GAME_SCALE * TERRAIN_IMG_HEIGHT)) {
-                int inboundsX = x - offsetX - EDITOR_BORDER_WIDTH;
-                int inboundsY = y - offsetY - EDITOR_BORDER_WIDTH;
+            if (x < offsetX + EDITOR_BORDER_THICKNESS + (GAME_SCALE * TERRAIN_IMG_WIDTH)  && y < offsetY + EDITOR_BORDER_THICKNESS + (GAME_SCALE * TERRAIN_IMG_HEIGHT)) {
+                int inboundsX = x - offsetX - EDITOR_BORDER_THICKNESS;
+                int inboundsY = y - offsetY - EDITOR_BORDER_THICKNESS;
 
                 int col = inboundsX / terrainTileWidth;
                 int row = inboundsY / terrainTileHeight;
@@ -133,8 +130,8 @@ public class EditorUI {
                 currentElementValue =  col + row * TERRAIN_COL_COUNT;
                 currentElementType = ELEMENT_TERRAIN;
 
-                selectorPosX = offsetX + EDITOR_BORDER_WIDTH + col * terrainTileWidth;
-                selectorPosY = offsetY + EDITOR_BORDER_WIDTH + row * terrainTileHeight;
+                selectorPosX = offsetX + EDITOR_BORDER_THICKNESS + col * terrainTileWidth;
+                selectorPosY = offsetY + EDITOR_BORDER_THICKNESS + row * terrainTileHeight;
             }
     }
 
@@ -155,7 +152,7 @@ public class EditorUI {
     }
 
     public void drawTerrainElements(Graphics g) {
-        g.drawImage(terrainImg, offsetX + EDITOR_BORDER_WIDTH, offsetY + EDITOR_BORDER_WIDTH , (int) (GAME_SCALE * TERRAIN_IMG_WIDTH), (int) (GAME_SCALE * TERRAIN_IMG_HEIGHT), null);
+        g.drawImage(terrainImg, offsetX + EDITOR_BORDER_THICKNESS, offsetY + EDITOR_BORDER_THICKNESS, (int) (GAME_SCALE * TERRAIN_IMG_WIDTH), (int) (GAME_SCALE * TERRAIN_IMG_HEIGHT), null);
     }
 
     public void drawElemenSelector(Graphics g) {

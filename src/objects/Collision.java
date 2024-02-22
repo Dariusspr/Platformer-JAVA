@@ -23,6 +23,14 @@ public class Collision {
                 (isPlatform(hitbox.x, hitbox.y + hitbox.height + speed, levelData) && isPlatform(hitbox.x + hitbox.width / 2, hitbox.y + hitbox.height + speed, levelData) && isPlatform(hitbox.x + hitbox.width, hitbox.y + hitbox.height + speed, levelData));
     }
 
+    public static boolean hitSpike(Rectangle2D.Float hitbox, int[][] levelData) {
+        boolean left = isSpike(hitbox.x, hitbox.y, levelData) || isSpike(hitbox.x, hitbox.y + hitbox.height / 2, levelData) || isSpike(hitbox.x, hitbox.y + hitbox.height, levelData);
+        boolean right = isSpike(hitbox.x + hitbox.width, hitbox.y, levelData) || isSpike(hitbox.x + hitbox.width, hitbox.y + hitbox.height / 2, levelData) || isSpike(hitbox.x + hitbox.width, hitbox.y + hitbox.height, levelData);
+        boolean top = isSpike(hitbox.x, hitbox.y, levelData) || isSpike(hitbox.x + hitbox.width / 2, hitbox.y, levelData) || isSpike(hitbox.x + hitbox.width, hitbox.y, levelData);
+        boolean down = isSpike(hitbox.x, hitbox.y + hitbox.height, levelData) || isSpike(hitbox.x + hitbox.width / 2, hitbox.y + hitbox.height, levelData) || isSpike(hitbox.x + hitbox.width, hitbox.y + hitbox.height, levelData);
+        return left || right || top || down;
+    }
+
     public static boolean objectsCollide(Rectangle2D.Float hitbox1, Rectangle2D.Float hitbox2) {
         return (hitbox1.intersects(hitbox2));
     }
@@ -40,6 +48,14 @@ public class Collision {
 
         return !(tile == 84 || tile == 101 || tile >= 108);
     }
+
+    private static boolean isSpike(float x, float y, int[][] levelData) {
+        int rowTile = (int) (y / TILE_SIZE);
+        int colTile = (int) (x / TILE_SIZE);
+        int tile = levelData[rowTile][colTile];
+        return tile >= 108 && tile <= 111;
+    }
+
     private static boolean isPlatform(float x, float y, int[][] levelData) {
         int rowTile = (int) (y / TILE_SIZE);
         int colTile = (int) (x / TILE_SIZE);

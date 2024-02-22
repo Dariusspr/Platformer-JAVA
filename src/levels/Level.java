@@ -1,10 +1,14 @@
 package levels;
 
 public class Level {
-    private int[][] terrainData;
-    private int[][] fruitData;
-    private int[] fruitCount;
     private String name;
+
+    // can change during at run time
+    private int[][] terrainData;
+    private int[] fruitData;
+    private int[] trapData;
+    private int PlayerX, playerY;
+    private int fruitCount;
     private float bestTime = 0;
     private int index;
 
@@ -13,14 +17,6 @@ public class Level {
     }
 
     LevelState levelState = LevelState.OTHER;
-    public int getTotalFruitCount() {
-        int total = 0;
-        for (int i = 0; i < fruitCount.length; i++) {
-            total += fruitCount[i];
-        }
-        return total;
-    }
-
 
     public LevelState getLevelState() {
         return levelState;
@@ -66,20 +62,20 @@ public class Level {
         this.bestTime = time;
     }
 
-    public void setFruitData(int[][] fruitData) {
+    public void setFruitData(int[] fruitData) {
         this.fruitData = fruitData;
     }
 
-    public void setFruitCount(int[] fruitCount) {
+    public int[] getFruitData() {
+        return fruitData;
+    }
+
+    public void setFruitCount(int fruitCount) {
         this.fruitCount = fruitCount;
     }
 
-    public int[] getFruitData(int type) {
-        return fruitData[type];
-    }
-
-    public int getFruitCount(int type) {
-        return fruitCount[type];
+    public int getFruitCount() {
+        return fruitCount;
     }
 
 }

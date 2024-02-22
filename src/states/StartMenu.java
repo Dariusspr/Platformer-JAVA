@@ -9,6 +9,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import static utils.Constants.UI.StartMenu.*;
+import static utils.Save.saveLevels;
+import static utils.Save.saveTimes;
 
 public class StartMenu extends State implements StateHandler{
 
@@ -53,7 +55,8 @@ public class StartMenu extends State implements StateHandler{
             GameState.setState(GameState.MENU);
         }
         if (onExit) {
-            // TODO: exit
+            saveLevels(game.getIngame().getLevelHandler().getAllLevels());
+            System. exit(0);
         }
     }
 

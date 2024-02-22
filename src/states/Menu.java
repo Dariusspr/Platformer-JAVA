@@ -6,6 +6,7 @@ import UI.ExitButton;
 import UI.PlayButton;
 import levels.Level;
 import main.Game;
+import utils.Constants;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -38,9 +39,9 @@ public class Menu extends State implements  StateHandler{
         empty = new Banner("No levels", NAME_BANNER_X, NAME_BANNER_Y, BANNER_WIDTH, BANNER_HEIGHT);
         nameBanners = new Banner[levels.length];
         timeBanners = new Banner[levels.length];
-        for (int i = 0; i < levels.length; i++) {
+        for (int i = 0; i < game.getIngame().getLevelHandler().getLevelCount(); i++) {
             nameBanners[i] = new Banner(levels[i].getLevelName(), NAME_BANNER_X, NAME_BANNER_Y, BANNER_WIDTH, BANNER_HEIGHT);
-            timeBanners[i] = new Banner(Float.toString(levels[i].getLevelBestTime()), TIME_BANNER_X, TIME_BANNER_Y, BANNER_WIDTH, BANNER_HEIGHT);
+            timeBanners[i] = new Banner(String.format("%.2f", levels[i].getLevelBestTime()), TIME_BANNER_X, TIME_BANNER_Y, BANNER_WIDTH, BANNER_HEIGHT);
         }
     }
 
@@ -57,6 +58,13 @@ public class Menu extends State implements  StateHandler{
         playButton.render(g);
         editButton.render(g);
         exitButton.render(g);
+    }
+
+    public void updateInfo() {
+        for (int i = 0; i < game.getIngame().getLevelHandler().getLevelCount(); i++) {
+            nameBanners[i].changeBannerText(levels[i].getLevelName());
+            timeBanners[i].changeBannerText(String.format("%.2f", levels[i].getLevelBestTime()));
+        }
     }
 
     @Override
@@ -100,13 +108,13 @@ public class Menu extends State implements  StateHandler{
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if((onPlay = playButton.onButton(e.getX(), e.getY()))) {
+        if(onPlay = playButton.onButton(e.getX(), e.getY())) {
             playButton.buttonDown();
         }
-        else if((onEdit = editButton.onButton(e.getX(), e.getY()))) {
+        else if(onEdit = editButton.onButton(e.getX(), e.getY())) {
             editButton.buttonDown();
         }
-        else if ((onExit = exitButton.onButton(e.getX(), e.getY()))) {
+        else if (onExit = exitButton.onButton(e.getX(), e.getY())) {
             exitButton.buttonDown();
         }
     }
@@ -125,7 +133,7 @@ public class Menu extends State implements  StateHandler{
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_D, KeyEvent.VK_SPACE, KeyEvent.VK_KP_RIGHT:
-                currentLevel = Math.min(levels.length - 1, currentLevel + 1);
+                currentLevel = Math.min(game.getIngame().getLevelHandler().getLevelCount() - 1, currentLevel + 1);
                 break;
             case KeyEvent.VK_A, KeyEvent.VK_KP_LEFT:
                 currentLevel = Math.max(currentLevel - 1, 0);

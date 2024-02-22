@@ -26,19 +26,12 @@ public class Constants {
 
         public static final int LEFT_DIRECTION = -1;
         public static final int RIGHT_DIRECTION = 1;
-
-
     }
     public static class GameWindow {
         public static final String WINDOW_NAME = "Platformer";
     }
 
     public static class Fruit {
-        public enum Fruits {
-            APPLE, BANANA, CHERRY, STRAWBERRY;
-        }
-        //public static final int FRUIT_COUNT = 4;
-        public static final int FRUIT_COUNT = 1;
         public static final int MAX_FRUIT_COUNT = 10;
 
         public static final int FRUIT_ANIM_SIZE = 32;
@@ -50,11 +43,6 @@ public class Constants {
         public static final int FRUIT_HITBOX_HEIGHT= (int) (FRUIT_SIZE * 0.35);
         public static final int FRUIT_WIDTH_OFFSET = (FRUIT_SIZE - FRUIT_HITBOX_WIDTH) / 2;
         public static final int FRUIT_HEIGHT_OFFSET = (int) (FRUIT_SIZE - FRUIT_HITBOX_HEIGHT * 2.0f);
-
-        public static final int APPLE_POINTS = 5;
-        public static final int BANANA_POINTS = 10;
-        public static final int CHERRY_POINTS = 10;
-        public static final int STRAWBERRY_POINTS = 10;
     }
 
     public static class Player {
@@ -147,7 +135,7 @@ public class Constants {
        public static class Editor {
            public static final int EDITOR_ERASE_VALUE = 84;
 
-           public static final int EDITOR_BORDER_WIDTH = (int) (20 * GAME_SCALE);
+           public static final int EDITOR_BORDER_THICKNESS = (int) (20 * GAME_SCALE);
 
            public static final int GRID_SIZE = Game.TILE_SIZE;
 
