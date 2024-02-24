@@ -1,11 +1,13 @@
 package UI;
 
-import static utils.Constants.UI.PLAY_BUTTON_PATH;
+import java.awt.image.BufferedImage;
+
 
 public class PlayButton extends Button{
 
-    public PlayButton(int x, int y, int width, int height) {
-        super(x,y,width, height, PLAY_BUTTON_PATH);
+    public PlayButton(int x, int y, int width, int height, BufferedImage[] animations) {
+        super(x,y,width, height);
+        setAnimations(animations);
     }
 
 }

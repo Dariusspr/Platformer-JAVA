@@ -1,9 +1,10 @@
 package UI;
 
-import static utils.Constants.UI.EDIT_BUTTON_PATH;
+import java.awt.image.BufferedImage;
 
 public class EditButton extends Button{
-    public EditButton(int x, int y, int width, int height) {
-        super(x, y, width, height, EDIT_BUTTON_PATH);
+    public EditButton(int x, int y, int width, int height, BufferedImage[] animations) {
+        super(x, y, width, height);
+        setAnimations(animations);
     }
 }

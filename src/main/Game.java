@@ -5,9 +5,9 @@ import states.GameState;
 import states.Ingame;
 import states.StartMenu;
 import states.Menu;
+import utils.AssetsManager;
 
 import java.awt.*;
-import java.awt.event.KeyListener;
 
 import static utils.Constants.Game.*;
 
@@ -18,7 +18,9 @@ public class Game implements  Runnable{
     private final StartMenu startMenu;
     private final Editor editor;
     private final Menu menu;
+    private final AssetsManager assetsManager;
     public Game(){
+        assetsManager = new AssetsManager();
         ingame = new Ingame(this);
         startMenu = new StartMenu(this);
         menu = new Menu(this);
@@ -95,23 +97,31 @@ public class Game implements  Runnable{
     private void update() {
         switch (GameState.state) {
             case START_MENU:
+                if (GameState.changed) {
+                    GameState.changed = false;
+                }
                 startMenu.update();
                 break;
             case MENU:
                 if (GameState.changed) {
-                    menu.updateInfo();
+                    menu.resetMenu();
                     GameState.changed = false;
                 }
                 menu.update();
                 break;
             case INGAME:
                 if (GameState.changed) {
-                    ingame.restartLevel();
+                    ingame.resetLevel();
                     GameState.changed = false;
                 }
                 ingame.update();
                 break;
             case EDITOR:
+                if (GameState.changed) {
+                    ingame.resetLevel();
+                    editor.resetEditor();
+                    GameState.changed = false;
+                }
                 editor.update();
                 break;
         }
@@ -127,5 +137,8 @@ public class Game implements  Runnable{
     }
     public Menu getMenu() {
         return menu;
+    }
+    public AssetsManager getAssetsManager() {
+        return assetsManager;
     }
 }

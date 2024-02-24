@@ -1,7 +1,7 @@
 package states;
 
 import UI.EditorUI;
-import levels.LevelHandler;
+import levels.LevelManager;
 import levels.Level;
 import main.Game;
 
@@ -18,37 +18,53 @@ public class Editor extends State implements StateHandler{
 
     private Level currentLevel;
 
-    private LevelHandler levelHandler;
+    private LevelManager levelManager;
     private EditorUI editorUI;
 
-    private int currentElementType = 0;
+
+    private ElementType currentElementType = ElementType.TERRAIN;
     private int currentElementValue = 0;
 
-    public Editor(Game game, LevelHandler levelHandler) {
+    public Editor(Game game, LevelManager levelManager) {
         super(game);
-        this.levelHandler = levelHandler;
-        editorUI = new EditorUI();
-        currentLevel = this.levelHandler.getCurrentLevel();
+        this.levelManager = levelManager;
+        editorUI = new EditorUI(this);
+        currentLevel = this.levelManager.getCurrentLevel();
     }
     @Override
     public void render(Graphics g) {
-        game.getIngame().renderCustomOffset(g, 0);
-       editorUI.render(g);
+        game.getIngame().render(g, 0);
+        editorUI.render(g);
     }
 
+    public void resetEditor() {
+
+        currentElementValue = 0;
+        editorUI.resetEditorUI();
+    }
 
     @Override
     public void update() {
-        levelHandler.update();
+        levelManager.update();
         game.getIngame().getPlayer().updatePosition();
         editorUI.update();
-        updateCurrentLevel();
+        setCurrentLevel();
         currentElementValue = editorUI.getCurrentElementValue();
         currentElementType = editorUI.getCurrentElementType();
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
         int mouseX = e.getX();
         int mouseY = e.getY();
 
@@ -63,36 +79,20 @@ public class Editor extends State implements StateHandler{
             }
             else if (SwingUtilities.isRightMouseButton(e)){
                 if (mouseY < editorUI.getOffsetY() && mouseY >= 0 && mouseX >= 0 && mouseX < PANEL_WIDTH) {
-                    currentElementType = 0;
+                    currentElementType = ElementType.TERRAIN;
                     currentElementValue = EDITOR_ERASE_VALUE;
                     modifyCurrentLevel(mouseX, mouseY);
                 }
             }
         }
-        else {
-            if (editorUI.onExit) {
-               GameState.setState(GameState.MENU);
-            }
-            else if (editorUI.onSave) {
-
-            }
-         }
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
+        else if (editorUI.onExit){
+            GameState.setState(GameState.MENU);
+        }
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
         if (editorUI.isInMenu()) {
-            editorUI.onSave = editorUI.saveButton.onButton(e.getX(), e.getY());
             editorUI.onExit = editorUI.exitButton.onButton(e.getX(), e.getY());
         }
     }
@@ -110,7 +110,7 @@ public class Editor extends State implements StateHandler{
             }
         } else if (SwingUtilities.isRightMouseButton(e)) {
             if (mouseY < editorUI.getOffsetY() && mouseY >= 0 && mouseX >= 0 && mouseX < PANEL_WIDTH) {
-                currentElementType = 0;
+                currentElementType = ElementType.TERRAIN;
                 currentElementValue = EDITOR_ERASE_VALUE;
                 modifyCurrentLevel(mouseX, mouseY);
             }
@@ -128,7 +128,7 @@ public class Editor extends State implements StateHandler{
             case KeyEvent.VK_F1:
                 GameState.setState(GameState.INGAME);
                 game.getIngame().setLastTimeCheck();
-                levelHandler.getCurrentLevel().setLevelState(Level.LevelState.OTHER);
+                levelManager.getCurrentLevel().setLevelState(Level.LevelState.OTHER);
                 break;
             case KeyEvent.VK_ESCAPE:
                 if (editorUI.isInMenu()) {
@@ -149,7 +149,7 @@ public class Editor extends State implements StateHandler{
         data[row][col] = currentElementValue;
     }
 
-    private void updateCurrentLevel() {
+    private void setCurrentLevel() {
         currentLevel = game.getIngame().getLevelHandler().getCurrentLevel();
     }
 }

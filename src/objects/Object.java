@@ -5,6 +5,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import static utils.Constants.Game.LEVEL_SCALE;
+import static utils.Constants.Game.RIGHT_DIRECTION;
 
 public abstract class Object {
     private float x, y;
@@ -102,6 +103,7 @@ public abstract class Object {
     public void reset() {
         this.x = initX;
         this.y = initY;
+        direction = RIGHT_DIRECTION;
         updateHitbox(initX, initY);
     }
 }

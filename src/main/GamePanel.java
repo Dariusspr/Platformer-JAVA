@@ -6,7 +6,6 @@ import inputs.MouseInputs;
 import javax.swing.*;
 import java.awt.*;
 
-import static utils.OSValidator.*;
 
 import static utils.Constants.Game.*;
 
@@ -30,9 +29,7 @@ public class GamePanel extends JPanel {
     }
 
     protected void paintComponent(Graphics g) {
-        if (isLinux()) {
-            Toolkit.getDefaultToolkit().sync(); // fixes rendering lag on linux
-        }
+        Toolkit.getDefaultToolkit().sync(); // fixes rendering lag on linux
         super.paintComponent(g);
         game.render(g);
     }

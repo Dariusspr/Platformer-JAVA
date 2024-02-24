@@ -7,4 +7,7 @@ public abstract class State {
     protected State(Game game) {
         this.game = game;
     }
+    public Game getGame() {
+        return game;
+    }
 }

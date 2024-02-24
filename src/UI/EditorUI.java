@@ -1,12 +1,14 @@
 package UI;
 
+import states.Editor;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import static utils.Constants.Game.*;
 import static utils.Constants.LevelHandler.*;
 import static utils.Constants.UI.Editor.*;
-import static utils.Load.*;
+import static utils.LoadSave.*;
 
 public class EditorUI {
     private String GRID_IMG = "assets/Background/grid.png";
@@ -21,25 +23,30 @@ public class EditorUI {
     private final int offsetX = 0;
     private final int offsetY = (int)PANEL_HEIGHT / 2;
 
-    private int currentElementType = 0;
+    private ElementType currentElementType = ElementType.TERRAIN;
     private int currentElementValue = 0;
 
     private int selectorPosX = offsetX + EDITOR_BORDER_THICKNESS;
     private int selectorPosY = offsetY + EDITOR_BORDER_THICKNESS;
 
-    private int terrainTileWidth = (int) (GAME_SCALE * TERRAIN_IMG_WIDTH / TERRAIN_COL_COUNT);
-    private int terrainTileHeight = (int) (GAME_SCALE * TERRAIN_IMG_HEIGHT / TERRAIN_ROW_COUNT);
+    private int terrainTileWidth = (int) (TERRAIN_IMG_WIDTH / TERRAIN_COL_COUNT * GAME_SCALE);
+    private int terrainTileHeight = (int) (TERRAIN_IMG_HEIGHT / TERRAIN_ROW_COUNT * GAME_SCALE);
 
     private boolean inMenu;
 
     public ExitButton exitButton;
-    public SaveButton saveButton;
-    public boolean onExit, onSave;
-    public EditorUI() {
+    public boolean onExit;
+    public EditorUI(Editor editor) {
         loadImages();
         loadAnimations();
-        exitButton = new ExitButton(EXIT_BUTTON_POSX, EXIT_BUTTON_POSY, BUTTON_WIDTH, BUTTON_HEIGHT);
-        saveButton = new SaveButton(SAVE_BUTTON_POSX, SAVE_BUTTON_POSY, BUTTON_WIDTH, BUTTON_HEIGHT);
+        exitButton = new ExitButton(EXIT_BUTTON_POSX, EXIT_BUTTON_POSY, BUTTON_WIDTH, BUTTON_HEIGHT,editor.getGame().getAssetsManager().getExitButtonAnimations() );
+    }
+
+    public void resetEditorUI() {
+        inMenu = false;
+        onExit = false;
+        currentElementType = ElementType.TERRAIN;
+        currentElementValue = 0;
     }
 
     private void loadImages() {
@@ -66,7 +73,6 @@ public class EditorUI {
         drawElemenSelector(g);
 
         if (inMenu) {
-            saveButton.render(g);
             exitButton.render(g);
         }
     }
@@ -80,12 +86,6 @@ public class EditorUI {
             exitButton.buttonUp();
         }
 
-        if (onSave) {
-            saveButton.buttonDown();
-        }
-        else {
-            saveButton.buttonUp();
-        }
     }
 
     private BufferedImage[] loadSelectorAnimation() {
@@ -101,11 +101,19 @@ public class EditorUI {
 
 
     public void drawBorder(Graphics g) {
-        g.fillRect(0, PANEL_HEIGHT / 2, PANEL_WIDTH , EDITOR_BORDER_THICKNESS);
+        // Vertical
         g.fillRect(0, PANEL_HEIGHT / 2, EDITOR_BORDER_THICKNESS, PANEL_HEIGHT / 2);
-
-        g.fillRect(0, PANEL_HEIGHT - EDITOR_BORDER_THICKNESS, PANEL_WIDTH , EDITOR_BORDER_THICKNESS);
+        g.fillRect((int) ((GAME_SCALE * TERRAIN_IMG_WIDTH) + EDITOR_BORDER_THICKNESS), PANEL_HEIGHT / 2, EDITOR_BORDER_THICKNESS, PANEL_HEIGHT / 2);
         g.fillRect(PANEL_WIDTH - EDITOR_BORDER_THICKNESS, PANEL_HEIGHT / 2, EDITOR_BORDER_THICKNESS, PANEL_HEIGHT / 2);
+
+        // Horizontal
+        g.fillRect(0, PANEL_HEIGHT / 2, PANEL_WIDTH , EDITOR_BORDER_THICKNESS);
+        g.fillRect(0, (int) (offsetY + EDITOR_BORDER_THICKNESS + GAME_SCALE * TERRAIN_IMG_HEIGHT), PANEL_WIDTH , EDITOR_BORDER_THICKNESS);
+        g.fillRect(0, PANEL_HEIGHT - EDITOR_BORDER_THICKNESS, PANEL_WIDTH , EDITOR_BORDER_THICKNESS);
+
+
+
+
     }
 
     public void drawGridOnLevel(Graphics g){
@@ -128,14 +136,14 @@ public class EditorUI {
                 int row = inboundsY / terrainTileHeight;
 
                 currentElementValue =  col + row * TERRAIN_COL_COUNT;
-                currentElementType = ELEMENT_TERRAIN;
+                currentElementType = ElementType.TERRAIN;
 
                 selectorPosX = offsetX + EDITOR_BORDER_THICKNESS + col * terrainTileWidth;
                 selectorPosY = offsetY + EDITOR_BORDER_THICKNESS + row * terrainTileHeight;
             }
     }
 
-    public int getCurrentElementType() {
+    public ElementType getCurrentElementType() {
         return currentElementType;
     }
 
@@ -157,16 +165,16 @@ public class EditorUI {
 
     public void drawElemenSelector(Graphics g) {
         switch (currentElementType) {
-            case ELEMENT_TERRAIN:
+            case TERRAIN:
                 drawElementSelectorOnTerrain(g);
                 break;
-            case ELEMENT_TRAP:
+            case FRUIT:
                 break;
-            case ELEMENT_ENEMY:
+            case PLAYER:
                 break;
-            case ELEMENT_POINTS:
+            case TRAP:
                 break;
-            case ELEMENT_PLAYER:
+            case ENEMY:
                 break;
         }
 

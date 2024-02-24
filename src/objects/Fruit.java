@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import static utils.Constants.Fruit.*;
-import static utils.Load.loadImage;
+import static utils.LoadSave.loadImage;
 
 public abstract class Fruit extends Object {
     private boolean exists = true;
@@ -17,15 +17,16 @@ public abstract class Fruit extends Object {
         super(x, y, FRUIT_SIZE, FRUIT_SIZE, FRUIT_HITBOX_WIDTH, FRUIT_HITBOX_HEIGHT, FRUIT_WIDTH_OFFSET, FRUIT_HEIGHT_OFFSET);
     }
 
-    protected void loadAnimations(String path) {
-        BufferedImage img = loadImage(path);
-        animations = new BufferedImage[FRUIT_ANIMATION_LENGTH];
-        for (int i = 0; i < FRUIT_ANIMATION_LENGTH; i++)
-        {
-            animations[i] =  img.getSubimage(i * FRUIT_ANIM_SIZE, 0 , FRUIT_ANIM_SIZE, FRUIT_ANIM_SIZE);
-        }
+//    protected void loadAnimations(String path) {
+//        BufferedImage img = loadImage(path);
+//        animations = new BufferedImage[FRUIT_ANIMATION_LENGTH];
+//        for (int i = 0; i < FRUIT_ANIMATION_LENGTH; i++)
+//        {
+//            animations[i] =  img.getSubimage(i * FRUIT_ANIM_SIZE, 0 , FRUIT_ANIM_SIZE, FRUIT_ANIM_SIZE);
+//        }
+//
+//    }
 
-    }
 
     public void setAnimations(BufferedImage[] animations) {
         this.animations = animations;

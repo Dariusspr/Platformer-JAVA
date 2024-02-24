@@ -1,24 +1,25 @@
 package UI;
 
+import main.Game;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static utils.Load.loadImage;
+import static utils.LoadSave.loadImage;
 
 public class Banner {
-    private final String BANNER_IMG = "assets/Menu/Banner.png";
     private BufferedImage bannerImg;
     private int x, y;
     private int width, height;
     Text text;
-    public Banner(String rawText, int x, int y, int width, int height) {
+    public Banner(String rawText, int x, int y, int width, int height, BufferedImage bannerImg, Game game) {
         this.x =x;
         this.y = y;
         this.width = width;
         this.height = height;
 
-        bannerImg = loadImage(BANNER_IMG);
-        text = new Text(rawText, (int) (width * 0.05f), (int) (x + 0.5f * width), y + height / 2, 'b');
+        this.bannerImg = bannerImg;
+        text = new Text(rawText, (int) (width * 0.05f), (int) (x + 0.5f * width), y + height / 2, game.getAssetsManager().getBlackText());
     }
 
     public void changeBannerText(String text) {
@@ -32,6 +33,5 @@ public class Banner {
 
         g.drawImage(bannerImg, x, y, width, height, null);
         text.render(g);
-        //g.drawString(rawText, x + width / 2 - 50, y + height / 2); // TODO: text from img alpha
     }
 }

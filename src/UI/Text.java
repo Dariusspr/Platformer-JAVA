@@ -3,40 +3,23 @@ package UI;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static utils.Load.loadImage;
+import static utils.LoadSave.loadImage;
 import  static utils.Constants.UI.Text.*;
 
 public class Text {
     private String text;
     private int size;
-    private char color;
     private BufferedImage[] symbols;
     private BufferedImage[] textImg;
     int x, y;
 
-    public Text(String text, int size, int x, int y, char color) {
+    public Text(String text, int size, int x, int y, BufferedImage[] symbols) {
         this.text = text.toLowerCase();
         this.size = size;
         this.x = x;
         this.y = y;
-        this.color = color;
-        loadTextIntoArray();
+        this.symbols = symbols;
         convertTextToImg();
-    }
-
-    private void loadTextIntoArray() {
-        BufferedImage img = loadImage(color == 'w' ? TEXT_IMG_WHITE : TEXT_IMG_BLACK);
-        symbols = new BufferedImage[SYMBOL_COUNT];
-        int index = 0;
-        for (int row = 0; row < ROW_COUNT; row++) {
-            for (int col = 0; col < COL_COUNT; col++) {
-                if (row == 2 && col == 7 || row == 4 && col == 9) {
-                    break;
-                }
-                symbols[index] = img.getSubimage(col * WIDTH,row * HEIGHT, WIDTH, HEIGHT);
-                index++;
-            }
-        }
     }
 
     public void updateText(String text) {

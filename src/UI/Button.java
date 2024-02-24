@@ -5,7 +5,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import static utils.Constants.UI.*;
-import static utils.Load.loadImage;
+import static utils.LoadSave.loadImage;
 
 public abstract class Button {
     protected int animWidth, animHeight;;
@@ -15,7 +15,7 @@ public abstract class Button {
 
     Rectangle2D.Float button;
 
-    protected Button(int x, int y, int width, int height, String path) {
+    protected Button(int x, int y, int width, int height) {
         button = new Rectangle2D.Float();
         button.x = x;
         button.y = y;
@@ -23,17 +23,10 @@ public abstract class Button {
         this.animHeight = BUTTON_ANIM_HEIGHT;
         button.width = width;
         button.height = height;
-        loadAnimations(path, animWidth, animHeight);
     }
 
-    private void loadAnimations(String path, int animWidth, int animHeight) {
-        BufferedImage img = loadImage(path);
-        animaton = new BufferedImage[BUTTON_ANIM_LENGTH];
-
-        for (int i = 0; i < BUTTON_ANIM_LENGTH; i++)
-        {
-            animaton[i]=  img.getSubimage(i * animWidth, 0 , animWidth, animHeight);
-        }
+    protected void setAnimations(BufferedImage[] animaton) {
+        this.animaton = animaton;
     }
 
     public void render(Graphics g) {

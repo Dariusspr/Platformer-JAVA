@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 
 import static utils.Constants.Game.*;
 import static utils.Constants.Player.*;
-import static utils.Load.*;
+import static utils.LoadSave.*;
 import static objects.Collision.*;
 
 public class Player extends Object {
@@ -24,46 +24,11 @@ public class Player extends Object {
 
     private final Ingame ingame;
 
-    public Player(float x, float y, Ingame ingame) {
+    public Player(float x, float y, BufferedImage[][] animations, Ingame ingame) {
         super(x, y, PLAYER_SIZE, PLAYER_SIZE, PLAYER_HITBOX_WIDTH, PLAYER_HITBOX_HEIGHT, PLAYER_WIDTH_OFFSET, PLAYER_HEIGHT_OFFSET);
         this.ingame = ingame;
-        loadAnimations();
+        this.animations = animations;
         setAction(PLAYER_IDLE);
-    }
-
-    private BufferedImage[] loadImages() {
-        final String[] PLAYER_ANIM_IMG = {
-                "assets/MainCharacters/" + character + "/Idle.png", "assets/MainCharacters/" + character + "/Hit.png",
-                "assets/MainCharacters/" + character + "/Run.png", "assets/MainCharacters/" + character + "/Jump.png",
-                "assets/MainCharacters/" + character + "/Fall.png", "assets/MainCharacters/" + character + "/DoubleJump.png",
-                "assets/MainCharacters/" + character + "/WallJump.png", "assets/MainCharacters/Appear.png",
-                "assets/MainCharacters/Disappear.png" };
-
-        BufferedImage[] img = new BufferedImage[PLAYER_ANIM_IMG.length];
-
-        for (int i = 0; i < PLAYER_ANIM_IMG.length; i++) {
-            img[i] = loadImage(PLAYER_ANIM_IMG[i]);
-        }
-
-        return img;
-    }
-
-    public void loadAnimations() {
-        BufferedImage[] img = loadImages();
-        animations = new BufferedImage[PLAYER_ANIM_COUNT][PLAYER_ANIM_MAX_FRAMES];
-
-        for (int i = 0; i < img.length; i++)
-        {
-            for (int j = 0; j < PLAYER_ANIM_LENGTH[i]; j++)
-            {
-                if (i >= PLAYER_APPEAR) {
-                    animations[i][j] =  img[i].getSubimage(j * PLAYER_ANIM_APPEAR_SIZE, 0 , PLAYER_ANIM_APPEAR_SIZE, PLAYER_ANIM_APPEAR_SIZE);
-                }
-                else {
-                    animations[i][j] =  img[i].getSubimage(j * PLAYER_ANIM_SIZE, 0 , PLAYER_ANIM_SIZE, PLAYER_ANIM_SIZE);
-                }
-            }
-        }
     }
 
     public void update() {

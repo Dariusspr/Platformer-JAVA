@@ -6,7 +6,7 @@ import UI.Text;
 import UI.WinUI;
 import levels.Level;
 import objects.Player;
-import levels.LevelHandler;
+import levels.LevelManager;
 import main.Game;
 
 import static utils.Constants.Game.*;
@@ -17,7 +17,7 @@ import java.awt.event.MouseEvent;
 
 public class Ingame extends State implements StateHandler{
     private Player player;
-    private LevelHandler levelHandler;
+    private LevelManager levelManager;
     private PauseUI pauseUi;
     private WinUI winUI;
     private LoseUI loseUI;
@@ -29,21 +29,21 @@ public class Ingame extends State implements StateHandler{
 
     public Ingame(Game game) {
         super(game);
-        levelHandler = new LevelHandler(this);
-        player = new Player(levelHandler.getPlayerX(), levelHandler.getPlayerY(),this);
-        pauseUi = new PauseUI();
-        loseUI = new LoseUI();
-        winUI = new WinUI();
-        time = new Text("00000", (int) (PANEL_WIDTH * 0.05), (int) (PANEL_WIDTH * 0.5f), (int) (PANEL_HEIGHT * 0.1f), 'w');
+        levelManager = new LevelManager(this);
+        player = new Player(levelManager.getPlayerX(), levelManager.getPlayerY(),game.getAssetsManager().getPlayerAnimations(), this);
+        pauseUi = new PauseUI(this);
+        loseUI = new LoseUI(this);
+        winUI = new WinUI(this);
+        time = new Text("00000", (int) (PANEL_WIDTH * 0.05), (int) (PANEL_WIDTH * 0.5f), (int) (PANEL_HEIGHT * 0.1f), game.getAssetsManager().getWhiteText());
     }
 
     @Override
     public void render(Graphics g) {
 
-        levelHandler.render(g);
+        levelManager.render(g);
         player.render(g);
         time.render(g);
-        Level.LevelState currentGameState = levelHandler.getCurrentLevel().getLevelState();
+        Level.LevelState currentGameState = levelManager.getCurrentLevel().getLevelState();
         switch (currentGameState) {
             case WON:
                 winUI.render(g);
@@ -57,8 +57,8 @@ public class Ingame extends State implements StateHandler{
         }
     }
 
-    public void renderCustomOffset(Graphics g, int offset) {
-        levelHandler.render(g, offset);
+    public void render(Graphics g, int offset) {
+        levelManager.render(g, offset);
         player.render(g, offset);
     }
 
@@ -66,19 +66,19 @@ public class Ingame extends State implements StateHandler{
         lastTimeCheck = System.currentTimeMillis();
     }
 
-    public void restartLevel() {
+    public void resetLevel() {
         player.reset();
-        levelHandler.resetLevel();
+        levelManager.resetLevel();
         currentTime = 0.0f;
         lastTimeCheck = System.currentTimeMillis();
     }
 
     @Override
     public void update() {
-        Level.LevelState currentGameState = levelHandler.getCurrentLevel().getLevelState();
+        Level.LevelState currentGameState = levelManager.getCurrentLevel().getLevelState();
         switch (currentGameState) {
             case WON:
-                levelHandler.updateLevelBestTime((float) currentTime);
+                levelManager.updateLevelBestTime((float) currentTime);
                 winUI.setBestTimeMessage(getLevelHandler().getCurrentLevel().getLevelBestTime());
                 winUI.setCurrentTime(getCurrentTime());
                 winUI.update();
@@ -90,7 +90,7 @@ public class Ingame extends State implements StateHandler{
                 pauseUi.update();
                 break;
             case OTHER:
-                levelHandler.update();
+                levelManager.update();
                 player.update();
                 updateOffsetRender();
                 updateTimer();
@@ -128,7 +128,7 @@ public class Ingame extends State implements StateHandler{
         }
 
         player.setOffsetRender(offsetWidthRender);
-        levelHandler.setRenderOffset(offsetWidthRender);
+        levelManager.setRenderOffset(offsetWidthRender);
     }
 
 
@@ -145,14 +145,14 @@ public class Ingame extends State implements StateHandler{
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        switch (levelHandler.getCurrentLevel().getLevelState()) {
+        switch (levelManager.getCurrentLevel().getLevelState()) {
             case WON -> {
                 if (winUI.onExit) {
                     GameState.setState(GameState.MENU);
                 }
                 else if (winUI.onRestart) {
-                    levelHandler.getCurrentLevel().setLevelState(Level.LevelState.OTHER);
-                    restartLevel();
+                    levelManager.getCurrentLevel().setLevelState(Level.LevelState.OTHER);
+                    resetLevel();
                 }
                 else if (winUI.onSave) {
                     // save changes
@@ -163,8 +163,8 @@ public class Ingame extends State implements StateHandler{
                     GameState.setState(GameState.MENU);
                 }
                 else if (loseUI.onRestart) {
-                    levelHandler.getCurrentLevel().setLevelState(Level.LevelState.OTHER);
-                    restartLevel();
+                    levelManager.getCurrentLevel().setLevelState(Level.LevelState.OTHER);
+                    resetLevel();
                 }
                 else if (loseUI.onSave) {
                     // save changes
@@ -175,8 +175,8 @@ public class Ingame extends State implements StateHandler{
                     GameState.setState(GameState.MENU);
                 }
                 else if (pauseUi.onRestart) {
-                    levelHandler.getCurrentLevel().setLevelState(Level.LevelState.OTHER);
-                    restartLevel();
+                    levelManager.getCurrentLevel().setLevelState(Level.LevelState.OTHER);
+                    resetLevel();
                 }
                 else if (pauseUi.onSave) {
                     // save changes
@@ -189,19 +189,16 @@ public class Ingame extends State implements StateHandler{
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        switch (levelHandler.getCurrentLevel().getLevelState()) {
+        switch (levelManager.getCurrentLevel().getLevelState()) {
             case WON -> {
-                winUI.onSave = pauseUi.saveButton.onButton(e.getX(), e.getY());
                 winUI.onExit = pauseUi.exitButton.onButton(e.getX(), e.getY());
                 winUI.onRestart = pauseUi.restartButton.onButton(e.getX(), e.getY());
             }
             case LOST -> {
-                loseUI.onSave = pauseUi.saveButton.onButton(e.getX(), e.getY());
                 loseUI.onExit = pauseUi.exitButton.onButton(e.getX(), e.getY());
                 loseUI.onRestart = pauseUi.restartButton.onButton(e.getX(), e.getY());
             }
             case PAUSED -> {
-                pauseUi.onSave = pauseUi.saveButton.onButton(e.getX(), e.getY());
                 pauseUi.onExit = pauseUi.exitButton.onButton(e.getX(), e.getY());
                 pauseUi.onRestart = pauseUi.restartButton.onButton(e.getX(), e.getY());
             }
@@ -217,7 +214,7 @@ public class Ingame extends State implements StateHandler{
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (levelHandler.getCurrentLevel().getLevelState() == Level.LevelState.OTHER) {
+        if (levelManager.getCurrentLevel().getLevelState() == Level.LevelState.OTHER) {
             switch(e.getKeyCode()) {
                 case KeyEvent.VK_SPACE:
                 case KeyEvent.VK_W:
@@ -235,7 +232,7 @@ public class Ingame extends State implements StateHandler{
 
     @Override
     public void keyReleased(KeyEvent e) {
-        switch (levelHandler.getCurrentLevel().getLevelState()) {
+        switch (levelManager.getCurrentLevel().getLevelState()) {
             case WON -> {
             }
             case LOST -> {
@@ -243,7 +240,7 @@ public class Ingame extends State implements StateHandler{
             case PAUSED -> {
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_ESCAPE:
-                        levelHandler.getCurrentLevel().setLevelState(Level.LevelState.OTHER);
+                        levelManager.getCurrentLevel().setLevelState(Level.LevelState.OTHER);
                         lastTimeCheck = System.currentTimeMillis();
                         break;
                 }
@@ -262,10 +259,10 @@ public class Ingame extends State implements StateHandler{
                         break;
                     case KeyEvent.VK_F1:
                         GameState.setState(GameState.EDITOR);
-                        levelHandler.getCurrentLevel().setLevelState(Level.LevelState.PAUSED);
+                        levelManager.getCurrentLevel().setLevelState(Level.LevelState.PAUSED);
                         break;
                     case KeyEvent.VK_ESCAPE:
-                        levelHandler.getCurrentLevel().setLevelState(Level.LevelState.PAUSED);
+                        levelManager.getCurrentLevel().setLevelState(Level.LevelState.PAUSED);
                         // render save, exit
                         break;
                 }
@@ -276,7 +273,7 @@ public class Ingame extends State implements StateHandler{
     public Player getPlayer() {
         return player;
     }
-    public LevelHandler getLevelHandler() {
-        return levelHandler;
+    public LevelManager getLevelHandler() {
+        return levelManager;
     }
 }

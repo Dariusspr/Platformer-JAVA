@@ -1,5 +1,7 @@
 package UI;
 
+import states.Ingame;
+
 import java.awt.*;
 
 import static utils.Constants.Game.PANEL_HEIGHT;
@@ -17,9 +19,11 @@ public class WinUI extends  IngameUI{
     Text winText;
     Text currText;
     Text bestText;
-    public WinUI() {
-        super(RESTART_BUTTON_POSX, RESTART_BUTTON_POSY, SAVE_BUTTON_POSX, SAVE_BUTTON_POSY, EXIT_BUTTON_POSX, EXIT_BUTTON_POSY);
-        winText = new Text(winMessage, (int)(0.03f * PANEL_WIDTH), (int) (PANEL_WIDTH * 0.47f), (int) (PANEL_HEIGHT * 0.2f), 'b');
+    public WinUI(Ingame ingame) {
+        super(RESTART_BUTTON_POSX, RESTART_BUTTON_POSY, EXIT_BUTTON_POSX, EXIT_BUTTON_POSY, ingame);
+        winText = new Text(winMessage, (int)(0.03f * PANEL_WIDTH), (int) (PANEL_WIDTH * 0.47f), (int) (PANEL_HEIGHT * 0.2f), ingame.getGame().getAssetsManager().getBlackText());
+        currText = new Text(currTimeMessage + String.format("%.2f", currentTime), (int)(0.03f * PANEL_WIDTH), (int) (PANEL_WIDTH * 0.47f), (int) (PANEL_HEIGHT * 0.8f),  ingame.getGame().getAssetsManager().getWhiteText());
+        bestText = new Text(bestTimeMessage + String.format("%.2f", bestTime), (int)(0.03f * PANEL_WIDTH), (int) (PANEL_WIDTH * 0.47f), (int) (PANEL_HEIGHT * 0.7f), ingame.getGame().getAssetsManager().getWhiteText());
     }
 
     public void setCurrentTime(float time) {
@@ -36,8 +40,8 @@ public class WinUI extends  IngameUI{
     }
 
     private void updateText() {
-        bestText = new Text(bestTimeMessage + String.format("%.2f", bestTime), (int)(0.03f * PANEL_WIDTH), (int) (PANEL_WIDTH * 0.47f), (int) (PANEL_HEIGHT * 0.7f), 'w');
-        currText = new Text(currTimeMessage + String.format("%.2f", currentTime), (int)(0.03f * PANEL_WIDTH), (int) (PANEL_WIDTH * 0.47f), (int) (PANEL_HEIGHT * 0.8f), 'w');
+        bestText.updateText(bestTimeMessage + String.format("%.2f", bestTime));
+        currText.updateText(currTimeMessage + String.format("%.2f", currentTime));
     }
 
     public void render(Graphics g) {

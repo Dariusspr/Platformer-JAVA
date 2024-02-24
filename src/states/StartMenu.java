@@ -9,8 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import static utils.Constants.UI.StartMenu.*;
-import static utils.Save.saveLevels;
-import static utils.Save.saveTimes;
+import static utils.LoadSave.saveLevels;
 
 public class StartMenu extends State implements StateHandler{
 
@@ -19,8 +18,8 @@ public class StartMenu extends State implements StateHandler{
     private ExitButton exitButton;
     public StartMenu(Game game) {
         super(game);
-        playButton = new PlayButton(PLAY_BUTTON_POSX, PLAY_BUTTON_POSY, STARTMENU_BUTTON_WIDTH, STARTMENU_BUTTON_HEIGHT);
-        exitButton = new ExitButton(EXIT_BUTTON_POSX, EXIT_BUTTON_POSY, STARTMENU_BUTTON_WIDTH, STARTMENU_BUTTON_HEIGHT);
+        playButton = new PlayButton(PLAY_BUTTON_POSX, PLAY_BUTTON_POSY, STARTMENU_BUTTON_WIDTH, STARTMENU_BUTTON_HEIGHT, game.getAssetsManager().getPlayButtonAnimations());
+        exitButton = new ExitButton(EXIT_BUTTON_POSX, EXIT_BUTTON_POSY, STARTMENU_BUTTON_WIDTH, STARTMENU_BUTTON_HEIGHT, game.getAssetsManager().getExitButtonAnimations());
     }
 
 
@@ -35,8 +34,6 @@ public class StartMenu extends State implements StateHandler{
     public void update() {
         if (!onPlay)
             playButton.update();
-        if (!onExit)
-            exitButton.update();
     }
 
     @Override
@@ -56,7 +53,7 @@ public class StartMenu extends State implements StateHandler{
         }
         if (onExit) {
             saveLevels(game.getIngame().getLevelHandler().getAllLevels());
-            System. exit(0);
+            System.exit(0);
         }
     }
 
@@ -65,8 +62,12 @@ public class StartMenu extends State implements StateHandler{
         if((onPlay = playButton.onButton(e.getX(), e.getY()))) {
             playButton.buttonDown();
         }
+
         if((onExit = exitButton.onButton(e.getX(), e.getY()))) {
             exitButton.buttonDown();
+        }
+        else {
+            exitButton.buttonUp();
         }
     }
 

@@ -105,12 +105,6 @@ public class Constants {
         public static int BUTTON_INIT_HEIGHT = (int) (Game.GAME_SCALE * BUTTON_ANIM_HEIGHT);
         public static int BUTTON_INIT_WIDTH = (int) (Game.GAME_SCALE * BUTTON_ANIM_WIDTH);
 
-        public static final String PLAY_BUTTON_PATH = "assets/Buttons/PlayButton.png";
-        public static final String EDIT_BUTTON_PATH =  "assets/Buttons/EditButton.png";
-        public static final String EXIT_BUTTON_PATH =  "assets/Buttons/ExitButton.png";
-        public static final String RESTART_BUTTON_PATH =  "assets/Buttons/RestartButton.png";
-        public static final String SAVE_BUTTON_PATH =  "assets/Buttons/SaveButton.png";
-
         public static class Text {
             public static int HEIGHT = 10;
             public static int WIDTH = 8;
@@ -127,10 +121,10 @@ public class Constants {
            public static int STARTMENU_BUTTON_HEIGHT = (int) BUTTON_INIT_HEIGHT * 2;
            public static int STARTMENU_BUTTON_WIDTH = (int) BUTTON_INIT_WIDTH * 2;
            public static int PLAY_BUTTON_POSX = (int) (PANEL_WIDTH * 0.4f);
-           public static int PLAY_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.3f);
+           public static int PLAY_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.4f);
 
            public static int EXIT_BUTTON_POSX = (int) (PANEL_WIDTH * 0.4f);
-           public static int EXIT_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.5f);
+           public static int EXIT_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.55f);
        }
        public static class Editor {
            public static final int EDITOR_ERASE_VALUE = 84;
@@ -155,11 +149,13 @@ public class Constants {
            public static int BUTTON_HEIGHT = (int) BUTTON_INIT_HEIGHT * 2;
            public static int BUTTON_WIDTH = (int) BUTTON_INIT_WIDTH * 2;
 
-           public static int SAVE_BUTTON_POSX = (int) (PANEL_WIDTH * 0.4f);
-           public static int SAVE_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.3f);
 
            public static int EXIT_BUTTON_POSX = (int) (PANEL_WIDTH * 0.4f);
            public static int EXIT_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.4f);
+
+           public enum ElementType {
+               TERRAIN, FRUIT, PLAYER, TRAP, ENEMY;
+           }
        }
 
        public static class Menu {

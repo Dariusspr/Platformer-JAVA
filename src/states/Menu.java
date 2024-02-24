@@ -6,7 +6,6 @@ import UI.ExitButton;
 import UI.PlayButton;
 import levels.Level;
 import main.Game;
-import utils.Constants;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -30,18 +29,18 @@ public class Menu extends State implements  StateHandler{
         super(game);
         levels = game.getIngame().getLevelHandler().getAllLevels();
         setUpBanners();
-        playButton = new PlayButton(PLAY_BUTTON_POSX, PLAY_BUTTON_POSY, BUTTON_WIDTH, BUTTON_HEIGHT);
-        editButton = new EditButton(EDIT_BUTTON_POSX, EDIT_BUTTON_POSY, BUTTON_WIDTH, BUTTON_HEIGHT);
-        exitButton = new ExitButton(EXIT_BUTTON_POSX, EXIT_BUTTON_POSY,BUTTON_WIDTH, BUTTON_HEIGHT);
+        playButton = new PlayButton(PLAY_BUTTON_POSX, PLAY_BUTTON_POSY, BUTTON_WIDTH, BUTTON_HEIGHT, game.getAssetsManager().getPlayButtonAnimations());
+        editButton = new EditButton(EDIT_BUTTON_POSX, EDIT_BUTTON_POSY, BUTTON_WIDTH, BUTTON_HEIGHT, game.getAssetsManager().getEditButtonAnimations());
+        exitButton = new ExitButton(EXIT_BUTTON_POSX, EXIT_BUTTON_POSY,BUTTON_WIDTH, BUTTON_HEIGHT, game.getAssetsManager().getExitButtonAnimations());
     }
 
     private void setUpBanners() {
-        empty = new Banner("No levels", NAME_BANNER_X, NAME_BANNER_Y, BANNER_WIDTH, BANNER_HEIGHT);
+        empty = new Banner("No levels", NAME_BANNER_X, NAME_BANNER_Y, BANNER_WIDTH, BANNER_HEIGHT, game.getAssetsManager().getBannerImg(), game);
         nameBanners = new Banner[levels.length];
         timeBanners = new Banner[levels.length];
         for (int i = 0; i < game.getIngame().getLevelHandler().getLevelCount(); i++) {
-            nameBanners[i] = new Banner(levels[i].getLevelName(), NAME_BANNER_X, NAME_BANNER_Y, BANNER_WIDTH, BANNER_HEIGHT);
-            timeBanners[i] = new Banner(String.format("%.2f", levels[i].getLevelBestTime()), TIME_BANNER_X, TIME_BANNER_Y, BANNER_WIDTH, BANNER_HEIGHT);
+            nameBanners[i] = new Banner(levels[i].getLevelName(), NAME_BANNER_X, NAME_BANNER_Y, BANNER_WIDTH, BANNER_HEIGHT, game.getAssetsManager().getBannerImg(), game);
+            timeBanners[i] = new Banner(String.format("%.2f", levels[i].getLevelBestTime()), TIME_BANNER_X, TIME_BANNER_Y, BANNER_WIDTH, BANNER_HEIGHT, game.getAssetsManager().getBannerImg(), game);
         }
     }
 
@@ -60,6 +59,13 @@ public class Menu extends State implements  StateHandler{
         exitButton.render(g);
     }
 
+    public void resetMenu() {
+        onExit =  false;
+        onEdit = false;
+        onPlay = false;
+        updateInfo();
+    }
+
     public void updateInfo() {
         for (int i = 0; i < game.getIngame().getLevelHandler().getLevelCount(); i++) {
             nameBanners[i].changeBannerText(levels[i].getLevelName());
@@ -69,15 +75,7 @@ public class Menu extends State implements  StateHandler{
 
     @Override
     public void update() {
-        if(!onPlay) {
-            playButton.update();
-        }
-        if (!onEdit) {
-            editButton.update();
-        }
-        if (!onExit) {
-            exitButton.update();
-        }
+        updateInfo();
     }
 
     @Override
@@ -93,15 +91,15 @@ public class Menu extends State implements  StateHandler{
     @Override
     public void mouseReleased(MouseEvent e) {
         if (onPlay) {
-            game.getIngame().getLevelHandler().setCurrentLevel(currentLevel);
+            game.getIngame().getLevelHandler().setCurrentLevelIndex(currentLevel);
             GameState.setState(GameState.INGAME);
         }
-        if (onEdit) {
-            game.getIngame().getLevelHandler().setCurrentLevel(currentLevel);
-            GameState.setState(GameState.EDITOR);
+        else if (onEdit) {
+            game.getIngame().getLevelHandler().setCurrentLevelIndex(currentLevel);
             game.getIngame().getLevelHandler().getCurrentLevel().setLevelState(Level.LevelState.PAUSED);
+            GameState.setState(GameState.EDITOR);
         }
-        if (onExit) {
+        else if (onExit) {
             GameState.setState(GameState.START_MENU);
         }
     }
@@ -111,11 +109,22 @@ public class Menu extends State implements  StateHandler{
         if(onPlay = playButton.onButton(e.getX(), e.getY())) {
             playButton.buttonDown();
         }
-        else if(onEdit = editButton.onButton(e.getX(), e.getY())) {
+        else {
+            playButton.buttonUp();
+        }
+
+        if(onEdit = editButton.onButton(e.getX(), e.getY())) {
             editButton.buttonDown();
         }
-        else if (onExit = exitButton.onButton(e.getX(), e.getY())) {
+        else {
+            editButton.buttonUp();
+        }
+
+        if (onExit = exitButton.onButton(e.getX(), e.getY())) {
             exitButton.buttonDown();
+        }
+        else {
+            exitButton.buttonUp();
         }
     }
 
