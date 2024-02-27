@@ -10,23 +10,26 @@ import utils.AssetsManager;
 import java.awt.*;
 
 import static utils.Constants.Game.*;
+import static utils.LoadSave.saveLevels;
 
-public class Game implements  Runnable{
+public class Game implements Runnable {
+    private final GameWindow gameWindow;
     private final GamePanel gamePanel;
-
     private final Ingame ingame;
     private final StartMenu startMenu;
     private final Editor editor;
     private final Menu menu;
     private final AssetsManager assetsManager;
+
+    private boolean quit;
     public Game(){
         assetsManager = new AssetsManager();
         ingame = new Ingame(this);
         startMenu = new StartMenu(this);
         menu = new Menu(this);
-        editor = new Editor(this, ingame.getLevelHandler());
+        editor = new Editor(this, ingame.getLevelManager());
         gamePanel = new GamePanel(this);
-        new GameWindow(gamePanel);
+        gameWindow = new GameWindow(gamePanel);
 
         gamePanel.requestFocus();
 
@@ -52,18 +55,18 @@ public class Game implements  Runnable{
 
         double deltaUps = 0;
         double deltaFps = 0;
-        while(true) {
+        while(!quit) {
 
             currentTime = System.nanoTime();
             deltaFps += (currentTime - previousTime) / timePerFrame;
             deltaUps += (currentTime - previousTime) / timePerUpdate;
             previousTime = currentTime;
 
-            if (deltaUps >= 1.0) { // 1 update
+            if (deltaUps >= 1.0) { // Update game logic
                 deltaUps--;
                 update();
             }
-            if (deltaFps >= 1.0) { // 1 frame
+            if (deltaFps >= 1.0) { // Draw frame
                 deltaFps--;
                 fpsCount++;
                 gamePanel.repaint();
@@ -75,6 +78,8 @@ public class Game implements  Runnable{
                 fpsCount = 0;
             }
         }
+
+        gameWindow.closeWindow();
     }
 
     public void render(Graphics g) {
@@ -140,5 +145,11 @@ public class Game implements  Runnable{
     }
     public AssetsManager getAssetsManager() {
         return assetsManager;
+    }
+
+    public void quit() {
+        System.out.println("Closing...");
+        saveLevels(getIngame().getLevelManager().getAllLevels());
+        quit = true;
     }
 }

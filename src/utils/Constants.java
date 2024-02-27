@@ -22,7 +22,7 @@ public class Constants {
         public static final int PANEL_HEIGHT = (int) (TILE_SIZE * TILE_ROW_COUNT);
         public static int LEFT_TILE_BORDER = (int) (0.5  * TILE_COL_COUNT);
         public static int RIGHT_TILE_BORDER = (int) (0.5  * TILE_COL_COUNT);
-        public static int MAX_TILE_OFFSET = LevelHandler.LEVEL_MAX_COL - TILE_COL_COUNT;
+        public static int MAX_TILE_OFFSET = LevelManager.LEVEL_MAX_COL - TILE_COL_COUNT;
 
         public static final int LEFT_DIRECTION = -1;
         public static final int RIGHT_DIRECTION = 1;
@@ -47,9 +47,9 @@ public class Constants {
 
     public static class Player {
         public static final float PLAYER_MOVE_SPEED = 1.1f * Game.GAME_SCALE;
-        public static final float PLAYER_JUMP_SPEED = 4.0f * Game.GAME_SCALE;
+        public static final float PLAYER_JUMP_SPEED = 3.7f * Game.GAME_SCALE;
         public static final float GRAVITY = 0.05f * Game.GAME_SCALE;
-        public static final float PLAYER_FALL_AFTER_COLLISION_SPEED = 1.7f * Game.GAME_SCALE;
+        public static final float PLAYER_FALL_AFTER_COLLISION_SPEED = 0.8f * Game.GAME_SCALE;
         public static final int PLAYER_ANIMATION_SPEED = 13;
 
 
@@ -78,26 +78,21 @@ public class Constants {
 
     }
 
-    public static class LevelHandler {
-        public static int MAX_LEVEL_COUNT = 100;
+    public static class LevelManager {
+        public static final int MAX_LEVEL_COUNT = 100;
 
-        public static int LEVEL_MAX_COL = 80;
-        public static int LEVEL_HEIGHT = 25;
+        public static final int LEVEL_MAX_COL = 80;
+        public static final int LEVEL_HEIGHT = 25;
 
-        public static final int ELEMENT_TERRAIN = 0;
-        public static final int ELEMENT_TRAP = 1;
-        public static final int ELEMENT_ENEMY = 2;
-        public static final int ELEMENT_POINTS = 3;
-        public static final int ELEMENT_PLAYER = 4;
-
-        public static int TERRAIN_WIDTH = 17; // TILES
-        public static int TERRAIN_HEIGHT = 7; // TILES
+        public static final int TERRAIN_WIDTH = 17; // TILES
+        public static final int TERRAIN_HEIGHT = 7; // TILES
         public static final int BACKGROUND_SIZE = 5760;
 
-
+        public static final String LEVEL_TEMPLATE = "TEMPLATE";
     }
 
     public static class UI {
+        public final static String TIME_FORMAT = "%.2f";
         public static int BUTTON_ANIM_LENGTH = 4;
         public static int BUTTON_ANIM_HEIGHT = 32;
         public static int BUTTON_ANIM_WIDTH = 96;
@@ -111,8 +106,6 @@ public class Constants {
             public static int ROW_COUNT = 5;
             public static int COL_COUNT = 10;
             public static int SYMBOL_COUNT = 46;
-            public static String TEXT_IMG_BLACK = "assets/Menu/Text/Text (Black) (8x10).png";
-            public static String TEXT_IMG_WHITE = "assets/Menu/Text/Text (White) (8x10).png";
         }
 
        public static class StartMenu {
@@ -169,27 +162,24 @@ public class Constants {
            public static final int NAME_BANNER_Y = (int) (PANEL_HEIGHT * 0.2 - BANNER_HEIGHT / 2);
            public static final int TIME_BANNER_X = (int) (PANEL_WIDTH / 2 - BANNER_WIDTH / 2);
            public static final int TIME_BANNER_Y = (int) (PANEL_HEIGHT * 0.4 - BANNER_HEIGHT / 2);
+           public static float MAX_BEST_TIME = 999999;
+           public static String NO_TIME = "-----";
 
            public static int BUTTON_HEIGHT = (int) BUTTON_INIT_HEIGHT * 2;
            public static int BUTTON_WIDTH = (int) BUTTON_INIT_WIDTH * 2;
            public static int PLAY_BUTTON_POSX = (int) (PANEL_WIDTH * 0.3f);
-           public static int PLAY_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.6f);
+           public static int PLAY_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.55f);
 
            public static int EDIT_BUTTON_POSX = (int) (PANEL_WIDTH * 0.5f);
-           public static int EDIT_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.6f);
+           public static int EDIT_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.55f);
 
            public static int EXIT_BUTTON_POSX = (int) (PANEL_WIDTH * 0.4f);
-           public static int EXIT_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.8f);
+           public static int EXIT_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.7f);
        }
-
-
 
        public static class Pause {
            public static int BUTTON_HEIGHT = (int) (BUTTON_INIT_HEIGHT * 1.5f);
            public static int BUTTON_WIDTH = (int) (BUTTON_INIT_WIDTH * 1.5f);
-
-           public static int SAVE_BUTTON_POSX = (int) (PANEL_WIDTH * 0.4f);
-           public static int SAVE_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.3f);
 
            public static int RESTART_BUTTON_POSX = (int) (PANEL_WIDTH * 0.4f);
            public static int RESTART_BUTTON_POSY = (int) (PANEL_HEIGHT * 0.4f);

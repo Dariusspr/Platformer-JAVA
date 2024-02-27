@@ -4,30 +4,48 @@ import java.awt.geom.Rectangle2D;
 import static utils.Constants.Game.*;
 public class Collision {
 
-
-
     public static boolean canMoveLeft(Rectangle2D.Float hitbox, float speed, int[][] levelData) {
-        return !(isTerrain(hitbox.x - speed, hitbox.y, levelData) || isTerrain(hitbox.x - speed, hitbox.y + hitbox.height / 2, levelData) || isTerrain(hitbox.x - speed, hitbox.y + hitbox.height, levelData));
+        return !(isTerrain(hitbox.x - speed, hitbox.y, levelData) ||
+                isTerrain(hitbox.x - speed, hitbox.y + hitbox.height / 2, levelData) ||
+                isTerrain(hitbox.x - speed, hitbox.y + hitbox.height, levelData));
     }
 
     public static boolean canMoveRight(Rectangle2D.Float hitbox, float speed, int[][] levelData) {
-        return !(isTerrain(hitbox.x + hitbox.width + speed, hitbox.y, levelData) || isTerrain(hitbox.x + hitbox.width + speed, hitbox.y + hitbox.height / 2, levelData) || isTerrain(hitbox.x + hitbox.width + speed, hitbox.y + hitbox.height, levelData));
+        return !(isTerrain(hitbox.x + hitbox.width + speed, hitbox.y, levelData) ||
+                isTerrain(hitbox.x + hitbox.width + speed, hitbox.y + hitbox.height / 2, levelData) ||
+                isTerrain(hitbox.x + hitbox.width + speed, hitbox.y + hitbox.height, levelData));
     }
 
     public static boolean canMoveUp(Rectangle2D.Float hitbox, float speed, int[][] levelData) {
-        return !(isTerrain(hitbox.x, hitbox.y - speed, levelData) || isTerrain(hitbox.x + hitbox.width / 2, hitbox.y - speed, levelData)|| isTerrain(hitbox.x + hitbox.width, hitbox.y - speed, levelData));
+        return !(isTerrain(hitbox.x, hitbox.y - speed, levelData) ||
+                isTerrain(hitbox.x + hitbox.width / 2, hitbox.y - speed, levelData)||
+                isTerrain(hitbox.x + hitbox.width, hitbox.y - speed, levelData));
     }
 
     public static boolean canMoveDown(Rectangle2D.Float hitbox, float speed, int[][] levelData) {
-        return !(isTerrain(hitbox.x, hitbox.y + hitbox.height + speed, levelData) || isTerrain(hitbox.x + hitbox.width / 2, hitbox.y + hitbox.height + speed, levelData) || isTerrain(hitbox.x + hitbox.width, hitbox.y + hitbox.height + speed, levelData)) &&
-                (isPlatform(hitbox.x, hitbox.y + hitbox.height + speed, levelData) && isPlatform(hitbox.x + hitbox.width / 2, hitbox.y + hitbox.height + speed, levelData) && isPlatform(hitbox.x + hitbox.width, hitbox.y + hitbox.height + speed, levelData));
+        return !(isTerrain(hitbox.x, hitbox.y + hitbox.height + speed, levelData) ||
+                isTerrain(hitbox.x + hitbox.width / 2, hitbox.y + hitbox.height + speed, levelData) ||
+                isTerrain(hitbox.x + hitbox.width, hitbox.y + hitbox.height + speed, levelData))
+                &&
+                (isPlatform(hitbox.x, hitbox.y + hitbox.height + speed, levelData) &&
+                isPlatform(hitbox.x + hitbox.width / 2, hitbox.y + hitbox.height + speed, levelData) &&
+                isPlatform(hitbox.x + hitbox.width, hitbox.y + hitbox.height + speed, levelData));
     }
 
     public static boolean hitSpike(Rectangle2D.Float hitbox, int[][] levelData) {
-        boolean left = isSpike(hitbox.x, hitbox.y, levelData) || isSpike(hitbox.x, hitbox.y + hitbox.height / 2, levelData) || isSpike(hitbox.x, hitbox.y + hitbox.height, levelData);
-        boolean right = isSpike(hitbox.x + hitbox.width, hitbox.y, levelData) || isSpike(hitbox.x + hitbox.width, hitbox.y + hitbox.height / 2, levelData) || isSpike(hitbox.x + hitbox.width, hitbox.y + hitbox.height, levelData);
-        boolean top = isSpike(hitbox.x, hitbox.y, levelData) || isSpike(hitbox.x + hitbox.width / 2, hitbox.y, levelData) || isSpike(hitbox.x + hitbox.width, hitbox.y, levelData);
-        boolean down = isSpike(hitbox.x, hitbox.y + hitbox.height, levelData) || isSpike(hitbox.x + hitbox.width / 2, hitbox.y + hitbox.height, levelData) || isSpike(hitbox.x + hitbox.width, hitbox.y + hitbox.height, levelData);
+        boolean left = isSpike(hitbox.x, hitbox.y, levelData) ||
+                isSpike(hitbox.x, hitbox.y + hitbox.height / 2, levelData) ||
+                isSpike(hitbox.x, hitbox.y + hitbox.height, levelData);
+        boolean right = isSpike(hitbox.x + hitbox.width, hitbox.y, levelData) ||
+                isSpike(hitbox.x + hitbox.width, hitbox.y + hitbox.height / 2, levelData) ||
+                isSpike(hitbox.x + hitbox.width, hitbox.y + hitbox.height, levelData);
+        boolean top = isSpike(hitbox.x, hitbox.y, levelData) ||
+                isSpike(hitbox.x + hitbox.width / 2, hitbox.y, levelData) ||
+                isSpike(hitbox.x + hitbox.width, hitbox.y, levelData);
+        boolean down = isSpike(hitbox.x, hitbox.y + hitbox.height, levelData) ||
+                isSpike(hitbox.x + hitbox.width / 2, hitbox.y + hitbox.height, levelData) ||
+                isSpike(hitbox.x + hitbox.width, hitbox.y + hitbox.height, levelData);
+
         return left || right || top || down;
     }
 

@@ -12,7 +12,7 @@ import static utils.Constants.Game.*;
 
 public class LoseUI extends IngameUI{
 
-    private String LostMessage = "you lost!";
+    private final String LostMessage = "you lost!";
     Text lostText;
     public LoseUI(Ingame ingame) {
         super(RESTART_BUTTON_POSX, RESTART_BUTTON_POSY, EXIT_BUTTON_POSX, EXIT_BUTTON_POSY, ingame);

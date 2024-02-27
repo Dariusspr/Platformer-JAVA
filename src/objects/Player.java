@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 
 import static utils.Constants.Game.*;
 import static utils.Constants.Player.*;
-import static utils.LoadSave.*;
 import static objects.Collision.*;
 
 public class Player extends Object {
@@ -43,7 +42,7 @@ public class Player extends Object {
     }
 
     public void render(Graphics g, int offset) {
-            super.renderCustomOffset(animations[playerAction][animationIndex], g, offset);
+            super.render(animations[playerAction][animationIndex], g, offset);
     }
 
     public void updatePosition() {
@@ -75,7 +74,7 @@ public class Player extends Object {
         Rectangle2D.Float hitbox = getHitbox();
 
         if (!flying) {
-            if (canMoveDown(hitbox, 0.1f, ingame.getLevelHandler().getCurrentLevelTerrain())) {
+            if (canMoveDown(hitbox, 0.1f, ingame.getLevelManager().getCurrentLevelTerrain())) {
                 flying = true;
                 flyingSpeed = -0.1f;
             }
@@ -85,7 +84,7 @@ public class Player extends Object {
         }
 
         if (flyingSpeed > 0) {
-            if (movingUp && canMoveUp(hitbox, flyingSpeed, ingame.getLevelHandler().getCurrentLevelTerrain())) {
+            if (movingUp && canMoveUp(hitbox, flyingSpeed, ingame.getLevelManager().getCurrentLevelTerrain())) {
                 y -= flyingSpeed;
                 flyingSpeed -= GRAVITY;
             }
@@ -98,7 +97,7 @@ public class Player extends Object {
             }
         }
         else {
-            if (canMoveDown(hitbox, -flyingSpeed, ingame.getLevelHandler().getCurrentLevelTerrain())) {
+            if (canMoveDown(hitbox, -flyingSpeed, ingame.getLevelManager().getCurrentLevelTerrain())) {
                 y -= flyingSpeed;
                 flyingSpeed -= GRAVITY;
             }
@@ -110,7 +109,7 @@ public class Player extends Object {
         }
 
         super.updatePosition(x, y);
-        super.updateHitbox(x, y);
+        super.updateHitbox();
     }
 
     private void updateXPosition() {
@@ -118,7 +117,7 @@ public class Player extends Object {
         float y = getY();
         Rectangle2D.Float hitbox = getHitbox();
         if (movingLeft && !movingRight) {
-            if (canMoveLeft(hitbox, PLAYER_MOVE_SPEED, ingame.getLevelHandler().getCurrentLevelTerrain())){
+            if (canMoveLeft(hitbox, PLAYER_MOVE_SPEED, ingame.getLevelManager().getCurrentLevelTerrain())){
                 x -= PLAYER_MOVE_SPEED;
             }
             else {
@@ -128,7 +127,7 @@ public class Player extends Object {
         }
 
         if (movingRight && !movingLeft) {
-            if (canMoveRight(hitbox, PLAYER_MOVE_SPEED, ingame.getLevelHandler().getCurrentLevelTerrain())) {
+            if (canMoveRight(hitbox, PLAYER_MOVE_SPEED, ingame.getLevelManager().getCurrentLevelTerrain())) {
                 x += PLAYER_MOVE_SPEED;
             }
             else {
@@ -138,7 +137,7 @@ public class Player extends Object {
         }
 
         super.updatePosition(x, y);
-        super.updateHitbox(x, y);
+        super.updateHitbox();
     }
 
     private void updateAction() {
@@ -191,6 +190,8 @@ public class Player extends Object {
     }
 
     public void reset() {
+        this.setX(ingame.getLevelManager().getCurrentLevel().getPlayerX());
+        this.setY(ingame.getLevelManager().getCurrentLevel().getPlayerY());
         super.reset();
         movingLeft = false;
         movingRight = false;

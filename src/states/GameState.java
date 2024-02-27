@@ -21,10 +21,7 @@ public enum GameState {
             changed = false;
         }
         switch (state) {
-            case START_MENU, MENU:
-                GameState.state = state;
-                break;
-            case INGAME:
+            case START_MENU, MENU, INGAME:
                 GameState.state = state;
                 break;
             case EDITOR:

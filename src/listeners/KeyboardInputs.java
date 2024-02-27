@@ -1,12 +1,10 @@
-package inputs;
+package listeners;
 
 import main.GamePanel;
 import states.GameState;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
-import static utils.Constants.Player.*;
 
 public class KeyboardInputs implements KeyListener {
     private final GamePanel gamePanel;
@@ -44,6 +42,8 @@ public class KeyboardInputs implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         switch (GameState.state) {
+            case START_MENU:
+                gamePanel.getGame().getStartMenu().keyReleased(e);
             case MENU:
                 gamePanel.getGame().getMenu().keyReleased(e);
                 break;

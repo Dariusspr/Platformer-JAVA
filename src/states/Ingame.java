@@ -10,6 +10,7 @@ import levels.LevelManager;
 import main.Game;
 
 import static utils.Constants.Game.*;
+import static utils.Constants.UI.TIME_FORMAT;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -30,11 +31,11 @@ public class Ingame extends State implements StateHandler{
     public Ingame(Game game) {
         super(game);
         levelManager = new LevelManager(this);
-        player = new Player(levelManager.getPlayerX(), levelManager.getPlayerY(),game.getAssetsManager().getPlayerAnimations(), this);
+        player = new Player(levelManager.getCurrentLevel().getPlayerX(), levelManager.getCurrentLevel().getPlayerY(),game.getAssetsManager().getPlayerAnimations(), this);
         pauseUi = new PauseUI(this);
         loseUI = new LoseUI(this);
         winUI = new WinUI(this);
-        time = new Text("00000", (int) (PANEL_WIDTH * 0.05), (int) (PANEL_WIDTH * 0.5f), (int) (PANEL_HEIGHT * 0.1f), game.getAssetsManager().getWhiteText());
+        time = new Text("000000", (int) (PANEL_WIDTH * 0.05), (int) (PANEL_WIDTH * 0.5f), (int) (PANEL_HEIGHT * 0.1f), game.getAssetsManager().getWhiteText());
     }
 
     @Override
@@ -79,7 +80,7 @@ public class Ingame extends State implements StateHandler{
         switch (currentGameState) {
             case WON:
                 levelManager.updateLevelBestTime((float) currentTime);
-                winUI.setBestTimeMessage(getLevelHandler().getCurrentLevel().getLevelBestTime());
+                winUI.setBestTimeMessage(getLevelManager().getCurrentLevel().getLevelBestTime());
                 winUI.setCurrentTime(getCurrentTime());
                 winUI.update();
                 break;
@@ -89,7 +90,7 @@ public class Ingame extends State implements StateHandler{
             case PAUSED:
                 pauseUi.update();
                 break;
-            case OTHER:
+            case PLAYING:
                 levelManager.update();
                 player.update();
                 updateOffsetRender();
@@ -101,7 +102,7 @@ public class Ingame extends State implements StateHandler{
     private void updateTimer() {
         currentTime += ((System.currentTimeMillis() - lastTimeCheck) / 1000.0f);
         lastTimeCheck = System.currentTimeMillis();
-        time.updateText(String.format("%.2f", currentTime));
+        time.updateText(String.format(TIME_FORMAT, currentTime));
     }
 
     private float getCurrentTime() {
@@ -151,11 +152,8 @@ public class Ingame extends State implements StateHandler{
                     GameState.setState(GameState.MENU);
                 }
                 else if (winUI.onRestart) {
-                    levelManager.getCurrentLevel().setLevelState(Level.LevelState.OTHER);
+                    levelManager.getCurrentLevel().setLevelState(Level.LevelState.PLAYING);
                     resetLevel();
-                }
-                else if (winUI.onSave) {
-                    // save changes
                 }
             }
             case LOST -> {
@@ -163,11 +161,8 @@ public class Ingame extends State implements StateHandler{
                     GameState.setState(GameState.MENU);
                 }
                 else if (loseUI.onRestart) {
-                    levelManager.getCurrentLevel().setLevelState(Level.LevelState.OTHER);
+                    levelManager.getCurrentLevel().setLevelState(Level.LevelState.PLAYING);
                     resetLevel();
-                }
-                else if (loseUI.onSave) {
-                    // save changes
                 }
             }
             case PAUSED -> {
@@ -175,14 +170,11 @@ public class Ingame extends State implements StateHandler{
                     GameState.setState(GameState.MENU);
                 }
                 else if (pauseUi.onRestart) {
-                    levelManager.getCurrentLevel().setLevelState(Level.LevelState.OTHER);
+                    levelManager.getCurrentLevel().setLevelState(Level.LevelState.PLAYING);
                     resetLevel();
                 }
-                else if (pauseUi.onSave) {
-                    // save changes
-                }
             }
-            case OTHER -> {
+            case PLAYING -> {
             }
         }
     }
@@ -202,7 +194,7 @@ public class Ingame extends State implements StateHandler{
                 pauseUi.onExit = pauseUi.exitButton.onButton(e.getX(), e.getY());
                 pauseUi.onRestart = pauseUi.restartButton.onButton(e.getX(), e.getY());
             }
-            case OTHER -> {
+            case PLAYING -> {
             }
         }
     }
@@ -214,7 +206,7 @@ public class Ingame extends State implements StateHandler{
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (levelManager.getCurrentLevel().getLevelState() == Level.LevelState.OTHER) {
+        if (levelManager.getCurrentLevel().getLevelState() == Level.LevelState.PLAYING) {
             switch(e.getKeyCode()) {
                 case KeyEvent.VK_SPACE:
                 case KeyEvent.VK_W:
@@ -240,12 +232,12 @@ public class Ingame extends State implements StateHandler{
             case PAUSED -> {
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_ESCAPE:
-                        levelManager.getCurrentLevel().setLevelState(Level.LevelState.OTHER);
+                        levelManager.getCurrentLevel().setLevelState(Level.LevelState.PLAYING);
                         lastTimeCheck = System.currentTimeMillis();
                         break;
                 }
             }
-            case OTHER -> {
+            case PLAYING -> {
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_SPACE:
                     case KeyEvent.VK_W:
@@ -263,7 +255,6 @@ public class Ingame extends State implements StateHandler{
                         break;
                     case KeyEvent.VK_ESCAPE:
                         levelManager.getCurrentLevel().setLevelState(Level.LevelState.PAUSED);
-                        // render save, exit
                         break;
                 }
             }
@@ -273,7 +264,7 @@ public class Ingame extends State implements StateHandler{
     public Player getPlayer() {
         return player;
     }
-    public LevelManager getLevelHandler() {
+    public LevelManager getLevelManager() {
         return levelManager;
     }
 }

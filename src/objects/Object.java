@@ -10,15 +10,15 @@ import static utils.Constants.Game.RIGHT_DIRECTION;
 public abstract class Object {
     private float x, y;
     private float initX, initY;
-    private int offsetWidthRender = 0;
+    private int offsetWidthRender;
     private int width, height;
     private int offsetWidthHitbox, offsetHeightHitbox;
     private Rectangle2D.Float hitbox;
-    private int direction = 1;
+    private int direction = RIGHT_DIRECTION;
 
-    protected Object(float x, float y, int width, int height, int hitboxWidth, int hiboxHeight, int offsetWidthHitbox, int offsetHeightHitbox) {
+    protected Object(float x, float y, int width, int height, int hitboxWidth, int hitboxHeight, int offsetWidthHitbox, int offsetHeightHitbox) {
         initEntity(x, y, width, height);
-        initHitbox(x, y, hitboxWidth, hiboxHeight, offsetWidthHitbox, offsetHeightHitbox);
+        initHitbox(x, y, hitboxWidth, hitboxHeight, offsetWidthHitbox, offsetHeightHitbox);
     }
 
     private void initHitbox(float x, float y, int width, int height, int offsetWidth, int offsetHeight) {
@@ -51,7 +51,7 @@ public abstract class Object {
         drawHitbox(g);
     }
 
-    protected void renderCustomOffset(BufferedImage frame, Graphics g, int offset) {
+    protected void render(BufferedImage frame, Graphics g, int offset) {
         g.drawImage(frame, (int)(LEVEL_SCALE * (this.x + (direction == -1 ? width : 0))) - offset, (int)(LEVEL_SCALE * this.y),
                 (int)(direction * this.width * LEVEL_SCALE), (int)(this.height * LEVEL_SCALE), null);
     }
@@ -61,7 +61,7 @@ public abstract class Object {
         g.drawRect((int)hitbox.x - offsetWidthRender, (int)hitbox.y, (int)hitbox.width, (int)hitbox.height);
     }
 
-    protected void updateHitbox(float x, float y) {
+    protected void updateHitbox() {
         this.hitbox.x = x + offsetWidthHitbox;
         this.hitbox.y = y + offsetHeightHitbox;
     }
@@ -86,11 +86,14 @@ public abstract class Object {
         return y;
     }
 
-    public void setX(int x) {
+    public void setX(float x) {
         this.x = x;
+        this.initX = x;
+
     }
-    public void setY(int y) {
+    public void setY(float y) {
         this.y = y;
+        this.initY = y;
     }
 
     public  float getWidth() {
@@ -101,9 +104,8 @@ public abstract class Object {
     }
 
     public void reset() {
-        this.x = initX;
-        this.y = initY;
+        updatePosition(initX, initY);
         direction = RIGHT_DIRECTION;
-        updateHitbox(initX, initY);
+        updateHitbox();
     }
 }

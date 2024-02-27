@@ -1,4 +1,4 @@
-package inputs;
+package listeners;
 
 import main.GamePanel;
 import states.GameState;

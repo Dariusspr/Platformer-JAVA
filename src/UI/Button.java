@@ -5,17 +5,16 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import static utils.Constants.UI.*;
-import static utils.LoadSave.loadImage;
 
-public abstract class Button {
-    protected int animWidth, animHeight;;
-    BufferedImage[] animaton;
+public class Button {
+    private int animWidth, animHeight;;
+    BufferedImage[] animation;
     private int animationIndex = 0;
     private int animationTick = 0;
 
     Rectangle2D.Float button;
 
-    protected Button(int x, int y, int width, int height) {
+    public Button(int x, int y, int width, int height, BufferedImage[] animation) {
         button = new Rectangle2D.Float();
         button.x = x;
         button.y = y;
@@ -23,14 +22,15 @@ public abstract class Button {
         this.animHeight = BUTTON_ANIM_HEIGHT;
         button.width = width;
         button.height = height;
+        this.animation = animation;
     }
 
-    protected void setAnimations(BufferedImage[] animaton) {
-        this.animaton = animaton;
+    protected void setAnimations(BufferedImage[] animation) {
+        this.animation = animation;
     }
 
     public void render(Graphics g) {
-        g.drawImage(animaton[animationIndex], (int) button.x, (int) button.y, (int) button.width, (int) button.height, null);
+        g.drawImage(animation[animationIndex], (int) button.x, (int) button.y, (int) button.width, (int) button.height, null);
     }
 
     public  void update() {

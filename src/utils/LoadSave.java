@@ -7,15 +7,19 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
-import static utils.Constants.LevelHandler.*;
+import static utils.Constants.LevelManager.*;
 import static utils.Constants.Fruit.*;
+import static utils.Constants.UI.TIME_FORMAT;
 
 public class LoadSave {
 
 
-    private static final String LEVEL_DIRECTORY = "assets/Levels/layout";
+    private static final String LEVEL_DIRECTORY = "assets/Levels/";
     private static final String COMMA_DELIMITER = ",";
     private static final String FILE_EXTENSION = ".csv";
 
@@ -31,17 +35,30 @@ public class LoadSave {
 
     public static String[] loadFileNames() {
         File dir = new File(LEVEL_DIRECTORY);
-        return dir.list();
+        List<String> files = new ArrayList<>();
+
+        for (String str : Objects.requireNonNull(dir.list())) {
+            if (!str.equals(LEVEL_TEMPLATE + FILE_EXTENSION)) {
+                files.add(str);
+            }
+        }
+
+        return files.toArray(new String[0]);
     }
+
+//    public static Level loadLevelTemplate() {
+//        return loadLevelData(LEVEL_TEMPLATE + FILE_EXTENSION);
+//    }
+
 
     public static Level loadLevelData(String name) {
         String path =  LEVEL_DIRECTORY + "/" + name;
-
         Level level = new Level();
         int[][] terrainData = new int[LEVEL_HEIGHT][LEVEL_MAX_COL];
-        int[] fruitData = new int[MAX_FRUIT_COUNT * 2];
-        int fruitCount;
+        float[] fruitData;
+        int fruitCount = 0;
         float bestTime;
+        float playerX, playerY;
 
         try(Scanner scanner = new Scanner(new File(path))) {
             // Terrain
@@ -60,17 +77,17 @@ public class LoadSave {
 
             // Fruits
             String[] values = scanner.nextLine().split(COMMA_DELIMITER);
-            int count = 0;
-            for (int i = 0; i < values.length / 2 && i < MAX_FRUIT_COUNT; i++) {
-                int value = Integer.parseInt(values[i * 2]);
-                if (value >= 0) {
-                    count++;
-                    fruitData[i * 2] = value;
-                    fruitData[i * 2 + 1] = Integer.parseInt(values[i * 2 + 1]);
-                }
+            fruitCount = Math.min(values.length / 2, MAX_FRUIT_COUNT);
+            fruitData = new float[fruitCount * 2];
+            for (int i = 0; i < fruitCount ; i++) {
+                fruitData[i * 2] = Float.parseFloat(values[i * 2]);
+                fruitData[i * 2 + 1] = Float.parseFloat(values[i * 2 + 1]);
             }
-            fruitCount = count;
+
             // Player
+            String[] playerPosString = scanner.nextLine().split(COMMA_DELIMITER);
+            playerX = Float.parseFloat(playerPosString[0]);
+            playerY = Float.parseFloat(playerPosString[1]);
 
             // Time
             String timeString = scanner.nextLine();
@@ -85,16 +102,17 @@ public class LoadSave {
         level.setFruitData(fruitData);
         level.setFruitCount(fruitCount);
         level.setBestTime(bestTime);
+        level.setPlayerPos(playerX, playerY);
 
         return level;
     }
 
     public static void saveLevels(Level[] levels) {
-        for (int i = 0; i < levels.length; i++) {
-            if (levels[i] == null) {
+        for (Level level : levels) {
+            if (level == null) {
                 break;
             }
-                saveLevelData(levels[i]);
+            saveLevelData(level);
         }
     }
 
@@ -105,27 +123,28 @@ public class LoadSave {
 
             // Terrain
             int[][] terrain = level.getTerrainData();
-            for (int row = 0; row < terrain.length; row++) {
+            for (int[] value : terrain) {
                 for (int col = 0; col < terrain[0].length; col++) {
-                    bufferedWriter.write(Integer.toString(terrain[row][col]));
+                    bufferedWriter.write(Integer.toString(value[col]));
                     bufferedWriter.write(COMMA_DELIMITER);
                 }
                 bufferedWriter.newLine();
             }
 
             // Fruits
-            int[] fruits = level.getFruitData();
+            float[] fruits = level.getFruitData();
             for (int col = 0; col < level.getFruitCount() * 2; col++) {
-                bufferedWriter.write(Integer.toString(fruits[col]));
+                bufferedWriter.write(Float.toString(fruits[col]));
                 bufferedWriter.write(COMMA_DELIMITER);
             }
             bufferedWriter.newLine();
 
             // Player position
-
+            bufferedWriter.write(level.getPlayerX() + COMMA_DELIMITER + level.getPlayerY());
+            bufferedWriter.newLine();
             // Best time
             float bestTime = level.getLevelBestTime();
-            bufferedWriter.write(String.format("%.2f", bestTime));
+            bufferedWriter.write(String.format(TIME_FORMAT, bestTime));
             bufferedWriter.newLine();
 
         } catch (Exception e) {

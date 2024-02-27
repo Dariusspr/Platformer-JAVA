@@ -10,6 +10,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
 
+import static utils.Constants.Fruit.FRUIT_ANIM_SIZE;
 import static utils.Constants.Game.*;
 import static utils.Constants.UI.Editor.*;
 
@@ -38,7 +39,7 @@ public class Editor extends State implements StateHandler{
     }
 
     public void resetEditor() {
-
+        setCurrentLevel();
         currentElementValue = 0;
         editorUI.resetEditorUI();
     }
@@ -46,9 +47,7 @@ public class Editor extends State implements StateHandler{
     @Override
     public void update() {
         levelManager.update();
-        game.getIngame().getPlayer().updatePosition();
         editorUI.update();
-        setCurrentLevel();
         currentElementValue = editorUI.getCurrentElementValue();
         currentElementType = editorUI.getCurrentElementType();
     }
@@ -69,24 +68,47 @@ public class Editor extends State implements StateHandler{
         int mouseY = e.getY();
 
         if (!editorUI.isInMenu()) {
-            if (SwingUtilities.isLeftMouseButton(e)) {
-                if (mouseY > editorUI.getOffsetY()) {
-                    editorUI.handleMouseClick(mouseX, mouseY);
-                }
-                else if (mouseY >= 0 && mouseX >= 0 && mouseX < PANEL_WIDTH){
-                    modifyCurrentLevel(mouseX, mouseY);
-                }
+            if (mouseY > editorUI.getOffsetY()) {
+                editorUI.handleMouseClick(mouseX, mouseY);
+                return;
             }
-            else if (SwingUtilities.isRightMouseButton(e)){
-                if (mouseY < editorUI.getOffsetY() && mouseY >= 0 && mouseX >= 0 && mouseX < PANEL_WIDTH) {
-                    currentElementType = ElementType.TERRAIN;
-                    currentElementValue = EDITOR_ERASE_VALUE;
-                    modifyCurrentLevel(mouseX, mouseY);
+
+            // Delete tile
+        if (SwingUtilities.isRightMouseButton(e)) {
+            if (mouseY < editorUI.getOffsetY() && mouseY >= 0 && mouseX >= 0 && mouseX < PANEL_WIDTH) {
+                // Delete fruit
+                game.getIngame().getLevelManager().deleteFruit((int) (mouseX / LEVEL_SCALE) , (int) (mouseY / LEVEL_SCALE));
+                // Delete terrain
+                currentElementType = ElementType.TERRAIN;
+                currentElementValue = EDITOR_ERASE_VALUE;
+                modifyTerrain(mouseX, mouseY);
+            }
+        }
+
+            // Place tile
+        if (SwingUtilities.isLeftMouseButton(e)) {
+            if (mouseY >= 0 && mouseX >= 0 && mouseX < PANEL_WIDTH){
+                switch (currentElementType) {
+                    case TERRAIN -> {
+                        modifyTerrain(mouseX, mouseY);
+                    }
+                    case FRUIT -> {
+                        game.getIngame().getLevelManager().createFruit((int) (mouseX / LEVEL_SCALE - FRUIT_ANIM_SIZE / 2 / LEVEL_SCALE),
+                                                                        (int) (mouseY / LEVEL_SCALE - FRUIT_ANIM_SIZE / 2 / LEVEL_SCALE));
+                    }
+                    case PLAYER -> {
+                        // change player pos
+                        game.getIngame().getLevelManager().getCurrentLevel().setPlayerPos((int) (mouseX / LEVEL_SCALE), (int) (mouseY / LEVEL_SCALE));
+                        game.getIngame().getPlayer().reset();
+                    }
                 }
             }
         }
+
+        }
         else if (editorUI.onExit){
             GameState.setState(GameState.MENU);
+            levelManager.saveFruitData();
         }
     }
 
@@ -102,18 +124,47 @@ public class Editor extends State implements StateHandler{
     public void mouseDragged(MouseEvent e) {
         int mouseX = e.getX();
         int mouseY = e.getY();
-        if (SwingUtilities.isLeftMouseButton(e)) {
+
+        if (!editorUI.isInMenu()) {
             if (mouseY > editorUI.getOffsetY()) {
                 editorUI.handleMouseClick(mouseX, mouseY);
-            } else if (mouseY >= 0 && mouseX >= 0 && mouseX < PANEL_WIDTH){
-                modifyCurrentLevel(mouseX, mouseY);
+                return;
             }
-        } else if (SwingUtilities.isRightMouseButton(e)) {
-            if (mouseY < editorUI.getOffsetY() && mouseY >= 0 && mouseX >= 0 && mouseX < PANEL_WIDTH) {
-                currentElementType = ElementType.TERRAIN;
-                currentElementValue = EDITOR_ERASE_VALUE;
-                modifyCurrentLevel(mouseX, mouseY);
+
+            // Delete tile
+            if (SwingUtilities.isRightMouseButton(e)) {
+                if (mouseY < editorUI.getOffsetY() && mouseY >= 0 && mouseX >= 0 && mouseX < PANEL_WIDTH) {
+
+                    // Delete fruit
+                    game.getIngame().getLevelManager().deleteFruit((int) (mouseX / LEVEL_SCALE) , (int) (mouseY / LEVEL_SCALE));
+
+                    // Delete terrain
+                    currentElementType = ElementType.TERRAIN;
+                    currentElementValue = EDITOR_ERASE_VALUE;
+                    modifyTerrain(mouseX, mouseY);
+                }
             }
+
+            // Place tile
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                if (mouseY >= 0 && mouseX >= 0 && mouseX < PANEL_WIDTH){
+                    switch (currentElementType) {
+                        case TERRAIN -> {
+                            modifyTerrain(mouseX, mouseY);
+                        }
+                        case FRUIT -> {
+                            game.getIngame().getLevelManager().createFruit((int) (mouseX / LEVEL_SCALE - FRUIT_ANIM_SIZE / 2 / LEVEL_SCALE),
+                                    (int) (mouseY / LEVEL_SCALE - FRUIT_ANIM_SIZE / 2 / LEVEL_SCALE));
+                        }
+                        case PLAYER -> {
+                            // change player pos
+                            game.getIngame().getLevelManager().getCurrentLevel().setPlayerPos((int) (mouseX / LEVEL_SCALE), (int) (mouseY / LEVEL_SCALE));
+                            game.getIngame().getPlayer().reset();
+                        }
+                    }
+                }
+            }
+
         }
     }
 
@@ -128,7 +179,8 @@ public class Editor extends State implements StateHandler{
             case KeyEvent.VK_F1:
                 GameState.setState(GameState.INGAME);
                 game.getIngame().setLastTimeCheck();
-                levelManager.getCurrentLevel().setLevelState(Level.LevelState.OTHER);
+                levelManager.getCurrentLevel().setLevelState(Level.LevelState.PLAYING);
+                levelManager.saveFruitData();
                 break;
             case KeyEvent.VK_ESCAPE:
                 if (editorUI.isInMenu()) {
@@ -141,15 +193,15 @@ public class Editor extends State implements StateHandler{
         }
     }
 
-    private void modifyCurrentLevel(int mouseX, int mouseY) {
+    private void modifyTerrain(int mouseX, int mouseY) {
+        // Delete terrain tile
         int[][] data = currentLevel.getTerrainData();
-
         int col = (int) (mouseX / (TILE_SIZE * LEVEL_SCALE));
         int row = (int) (mouseY / (TILE_SIZE * LEVEL_SCALE));
         data[row][col] = currentElementValue;
     }
 
     private void setCurrentLevel() {
-        currentLevel = game.getIngame().getLevelHandler().getCurrentLevel();
+        currentLevel = game.getIngame().getLevelManager().getCurrentLevel();
     }
 }
