@@ -11,7 +11,9 @@ import java.awt.*;
 
 import static utils.Constants.Game.*;
 import static utils.LoadSave.saveLevels;
-
+/**
+ * Represents the main game class responsible for running the game loop.
+ */
 public class Game implements Runnable {
     private final GameWindow gameWindow;
     private final GamePanel gamePanel;
@@ -22,6 +24,9 @@ public class Game implements Runnable {
     private final AssetsManager assetsManager;
 
     private boolean quit;
+    /**
+     * Constructs a Game object and initializes all necessary objects
+     */
     public Game(){
         assetsManager = new AssetsManager();
         ingame = new Ingame(this);
@@ -36,6 +41,9 @@ public class Game implements Runnable {
         startGame();
     }
 
+    /**
+     * Starts game loop on separate thread
+     */
     private void startGame() {
         Thread gameThread = new Thread(this);
         gameThread.start();
@@ -82,6 +90,11 @@ public class Game implements Runnable {
         gameWindow.closeWindow();
     }
 
+    /**
+     * Renders the game elements based on the current game state.
+     *
+     * @param g The Graphics object to render with.
+     */
     public void render(Graphics g) {
         switch (GameState.state) {
             case START_MENU:
@@ -99,6 +112,9 @@ public class Game implements Runnable {
         }
     }
 
+    /**
+     * Updates the game logic based on the current game state.
+     */
     private void update() {
         switch (GameState.state) {
             case START_MENU:
@@ -109,7 +125,7 @@ public class Game implements Runnable {
                 break;
             case MENU:
                 if (GameState.changed) {
-                    menu.resetMenu();
+                    menu.updateMenuInfo();
                     GameState.changed = false;
                 }
                 menu.update();
@@ -131,22 +147,41 @@ public class Game implements Runnable {
                 break;
         }
     }
+
+    /**
+     * @return The InGame object.
+     */
     public Ingame getIngame() {
         return ingame;
     }
+    /**
+     * @return The StartMenu object.
+     */
     public StartMenu getStartMenu() {
         return startMenu;
     }
+    /**
+     * @return The Editor object.
+     */
     public Editor getEditor() {
         return editor;
     }
+    /**
+     * @return The Menu object.
+     */
     public Menu getMenu() {
         return menu;
     }
+    /**
+     * @return The AssetsManager object.
+     */
     public AssetsManager getAssetsManager() {
         return assetsManager;
     }
 
+    /**
+     * Quits the game by saving data and quiting game loop
+     */
     public void quit() {
         System.out.println("Closing...");
         saveLevels(getIngame().getLevelManager().getAllLevels());

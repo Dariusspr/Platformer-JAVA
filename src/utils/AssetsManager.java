@@ -14,7 +14,9 @@ import static utils.Constants.UI.Editor.SELECTOR_FRAME_COUNT;
 import static utils.Constants.UI.Editor.SELECTOR_INIT_SIZE;
 import static utils.Constants.UI.Text.*;
 import static utils.LoadSave.loadImage;
-
+/**
+ * The AssetsManager class manages the loading and storage of various assets used in the game
+ */
 public class AssetsManager {
     private final String PLAYER_CHARACTER = "MaskDude";
     private final String[] PLAYER_ANIM_IMG_PATH = {
@@ -23,18 +25,6 @@ public class AssetsManager {
             "assets/MainCharacters/" + PLAYER_CHARACTER + "/Fall.png", "assets/MainCharacters/" + PLAYER_CHARACTER + "/DoubleJump.png",
             "assets/MainCharacters/" + PLAYER_CHARACTER + "/WallJump.png", "assets/MainCharacters/Appear.png",
             "assets/MainCharacters/Disappear.png" };
-    private final String APPLE_IMG_PATH = "assets/Items/Fruits/Apple.png";
-    private final String BANNER_IMG_PATH = "assets/Menu/Banner.png";
-    private final String PLAY_BUTTON_PATH = "assets/Buttons/PlayButton.png";
-    private final String EDIT_BUTTON_PATH =  "assets/Buttons/EditButton.png";
-    private final String EXIT_BUTTON_PATH =  "assets/Buttons/ExitButton.png";
-    private final String RESTART_BUTTON_PATH =  "assets/Buttons/RestartButton.png";
-    private final String TEXT_IMG_BLACK = "assets/Menu/Text/Text (Black) (8x10).png";
-    private final String TEXT_IMG_WHITE = "assets/Menu/Text/Text (White) (8x10).png";
-    private final String GRID_IMG_PATH = "assets/Background/grid.png";
-    private final String TERRAIN_IMG_PATH = "assets/Terrain/Terrain.png";
-    private final String SELECTOR_IMG_PATH = "assets/Menu/Selector.png";
-    private String BACKGROUND_IMG_PATH = "assets/Background/background_blue.png";
 
     private BufferedImage playerImg;
     private BufferedImage[][] playerAnimations;
@@ -67,14 +57,17 @@ public class AssetsManager {
     }
 
     private void loadGrid() {
+        String GRID_IMG_PATH = "assets/Background/grid.png";
         gridImg = loadImage(GRID_IMG_PATH);
     }
 
     private void loadBackground() {
+        String BACKGROUND_IMG_PATH = "assets/Background/background_blue.png";
         backgroundImg = loadImage(BACKGROUND_IMG_PATH);
     }
 
     private void loadTerrain() {
+        String TERRAIN_IMG_PATH = "assets/Terrain/Terrain.png";
         terrainImg = loadImage(TERRAIN_IMG_PATH);
 
         terrainArray = new BufferedImage[TERRAIN_HEIGHT * TERRAIN_WIDTH];
@@ -106,6 +99,7 @@ public class AssetsManager {
 
     private void loadSelectorAnimations() {
 
+        String SELECTOR_IMG_PATH = "assets/Menu/Selector.png";
         BufferedImage img = loadImage(SELECTOR_IMG_PATH);
         selectorAnimations = new BufferedImage[SELECTOR_FRAME_COUNT];
 
@@ -125,6 +119,7 @@ public class AssetsManager {
     }
 
     private void loadAppleAnimations() {
+        String APPLE_IMG_PATH = "assets/Items/Fruits/Apple.png";
         BufferedImage img = loadImage(APPLE_IMG_PATH);
         appleAnimations = new BufferedImage[FRUIT_ANIMATION_LENGTH];
         for (int i = 0; i < FRUIT_ANIMATION_LENGTH; i++)
@@ -135,13 +130,18 @@ public class AssetsManager {
     }
 
     private void loadBannerImg() {
+        String BANNER_IMG_PATH = "assets/Menu/Banner.png";
         bannerImg = loadImage(BANNER_IMG_PATH);
     }
 
     private void loadButtonAnimations() {
+        String PLAY_BUTTON_PATH = "assets/Buttons/PlayButton.png";
         playButtonAnimations =  loadButtonAnimations(PLAY_BUTTON_PATH);
+        String EDIT_BUTTON_PATH = "assets/Buttons/EditButton.png";
         editButtonAnimations =  loadButtonAnimations(EDIT_BUTTON_PATH);
+        String EXIT_BUTTON_PATH = "assets/Buttons/ExitButton.png";
         exitButtonAnimations =  loadButtonAnimations(EXIT_BUTTON_PATH);
+        String RESTART_BUTTON_PATH = "assets/Buttons/RestartButton.png";
         restartButtonAnimations =  loadButtonAnimations(RESTART_BUTTON_PATH);
     }
 
@@ -157,7 +157,9 @@ public class AssetsManager {
     }
 
     private void loadTexts() {
+        String TEXT_IMG_BLACK = "assets/Menu/Text/Text (Black) (8x10).png";
         blackText = loadText(TEXT_IMG_BLACK);
+        String TEXT_IMG_WHITE = "assets/Menu/Text/Text (White) (8x10).png";
         whiteText = loadText(TEXT_IMG_WHITE);
     }
 

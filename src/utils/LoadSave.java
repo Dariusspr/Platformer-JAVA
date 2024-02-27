@@ -15,14 +15,22 @@ import java.util.Scanner;
 import static utils.Constants.LevelManager.*;
 import static utils.Constants.Fruit.*;
 import static utils.Constants.UI.TIME_FORMAT;
-
+/**
+ * The LoadSave class provides utility methods for loading and saving game assets and level data.
+ */
 public class LoadSave {
 
 
     private static final String LEVEL_DIRECTORY = "assets/Levels/";
     private static final String COMMA_DELIMITER = ",";
     private static final String FILE_EXTENSION = ".csv";
-
+    /**
+     * Loads an image from the specified path.
+     *
+     * @param path The path to the image file.
+     * @return The BufferedImage loaded from the file.
+     * @throws RuntimeException if the image cannot be loaded.
+     */
     public static BufferedImage loadImage(String path) {
         BufferedImage img;
         try {
@@ -32,7 +40,11 @@ public class LoadSave {
         }
         return img;
     }
-
+    /**
+     * Loads the names of all level files from the level directory.
+     *
+     * @return An array of strings containing the names of the level files.
+     */
     public static String[] loadFileNames() {
         File dir = new File(LEVEL_DIRECTORY);
         List<String> files = new ArrayList<>();
@@ -50,13 +62,19 @@ public class LoadSave {
 //        return loadLevelData(LEVEL_TEMPLATE + FILE_EXTENSION);
 //    }
 
-
+    /**
+     * Loads level data from a file with the given name.
+     *
+     * @param name The name of the level file to load.
+     * @return The loaded Level object.
+     * @throws RuntimeException if the level data cannot be loaded.
+     */
     public static Level loadLevelData(String name) {
         String path =  LEVEL_DIRECTORY + "/" + name;
         Level level = new Level();
         int[][] terrainData = new int[LEVEL_HEIGHT][LEVEL_MAX_COL];
         float[] fruitData;
-        int fruitCount = 0;
+        int fruitCount;
         float bestTime;
         float playerX, playerY;
 
@@ -106,7 +124,11 @@ public class LoadSave {
 
         return level;
     }
-
+    /**
+     * Save all elements
+     *
+     * @param levels The array of levels to save.
+     */
     public static void saveLevels(Level[] levels) {
         for (Level level : levels) {
             if (level == null) {
@@ -115,7 +137,12 @@ public class LoadSave {
             saveLevelData(level);
         }
     }
-
+    /**
+     * Saves level data to a file.
+     *
+     * @param level The Level object containing the data to save.
+     * @throws RuntimeException if the level data cannot be saved.
+     */
     public static void saveLevelData(Level level) {
         String path =  LEVEL_DIRECTORY + "/" + level.getLevelName() + FILE_EXTENSION;
 

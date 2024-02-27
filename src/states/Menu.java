@@ -12,7 +12,9 @@ import java.awt.event.MouseEvent;
 import static utils.Constants.UI.Menu.*;
 import static utils.Constants.UI.TIME_FORMAT;
 
-
+/**
+ * The Menu state displays options for playing, editing levels, or exiting.
+ */
 public class Menu extends State implements  StateHandler{
 
     private final String NO_LEVELS_TEXT = "No levels";
@@ -26,6 +28,11 @@ public class Menu extends State implements  StateHandler{
     private Button exitButton;
     private boolean onPlay, onEdit, onExit;
     private int bannerIndex = 0;
+
+    /**
+     * Constructs the Menu state.
+     * @param game The Game object.
+     */
     public Menu(Game game) {
         super(game);
         levels = game.getIngame().getLevelManager().getAllLevels();
@@ -34,7 +41,9 @@ public class Menu extends State implements  StateHandler{
         editButton = new Button(EDIT_BUTTON_POSX, EDIT_BUTTON_POSY, BUTTON_WIDTH, BUTTON_HEIGHT, game.getAssetsManager().getEditButtonAnimations());
         exitButton = new Button(EXIT_BUTTON_POSX, EXIT_BUTTON_POSY,BUTTON_WIDTH, BUTTON_HEIGHT, game.getAssetsManager().getExitButtonAnimations());
     }
-
+    /**
+     * Creates banners representing basic info about each level.
+     */
     private void setUpBanners() {
         empty = new Banner(NO_LEVELS_TEXT, NAME_BANNER_X, NAME_BANNER_Y, BANNER_WIDTH, BANNER_HEIGHT, game.getAssetsManager().getBannerImg(), game);
         nameBanners = new Banner[levels.length];
@@ -43,6 +52,12 @@ public class Menu extends State implements  StateHandler{
             createBanner(levels[i].getLevelName(), levels[i].getLevelBestTime());
         }
     }
+
+    /**
+     * Creates banners representing basic info about level.
+     * @param name The name of the level.
+     * @param time The best time for the level.
+     */
     public void createBanner(String name, float time) {
         nameBanners[bannerIndex] = new Banner(name, NAME_BANNER_X, NAME_BANNER_Y, BANNER_WIDTH, BANNER_HEIGHT, game.getAssetsManager().getBannerImg(), game);
         if (time >= MAX_BEST_TIME) {
@@ -53,6 +68,10 @@ public class Menu extends State implements  StateHandler{
         }
         bannerIndex++;
     }
+    /**
+     * Renders the Menu state.
+     * @param g The Graphics object.
+     */
     @Override
     public void render(Graphics g) {
         if (levels.length != 0) {
@@ -67,15 +86,10 @@ public class Menu extends State implements  StateHandler{
         editButton.render(g);
         exitButton.render(g);
     }
-
-    public void resetMenu() {
-        onExit =  false;
-        onEdit = false;
-        onPlay = false;
-        updateInfo();
-    }
-
-    public void updateInfo() {
+    /**
+     * Updates info presented in the menu state
+     */
+    public void updateMenuInfo() {
         for (int i = 0; i < game.getIngame().getLevelManager().getLevelCount(); i++) {
             nameBanners[i].changeBannerText(levels[i].getLevelName());
             float time  = levels[i].getLevelBestTime();
@@ -90,7 +104,6 @@ public class Menu extends State implements  StateHandler{
 
     @Override
     public void update() {
-        updateInfo();
     }
 
     @Override

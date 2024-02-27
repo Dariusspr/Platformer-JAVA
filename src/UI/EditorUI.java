@@ -10,7 +10,9 @@ import static utils.Constants.Game.*;
 import static utils.Constants.LevelManager.*;
 import static utils.Constants.Player.PLAYER_SIZE;
 import static utils.Constants.UI.Editor.*;
-
+/**
+ * The EditorUI class represents the user interface for the editor mode.
+ */
 public class EditorUI {
     private final BufferedImage gridImg;
     private final BufferedImage terrainImg;
@@ -37,6 +39,10 @@ public class EditorUI {
 
     public Button exitButton;
     public boolean onExit;
+    /**
+     * Constructs an EditorUI object
+     * @param editor The Editor instance.
+     */
     public EditorUI(Editor editor) {
         gridImg = editor.getGame().getAssetsManager().getGridImg();
         terrainImg = editor.getGame().getAssetsManager().getTerrainImg();
@@ -49,7 +55,9 @@ public class EditorUI {
                                     BUTTON_WIDTH, BUTTON_HEIGHT,
                                     editor.getGame().getAssetsManager().getExitButtonAnimations() );
     }
-
+    /**
+     * Resets the editor UI state to initial state
+     */
     public void resetEditorUI() {
         inMenu = false;
         onExit = false;
@@ -57,14 +65,26 @@ public class EditorUI {
         currentElementValue = 0;
     }
 
+    /**
+     * Sets the editor UI's menu state.
+     * @param state true or false
+     */
     public void setInMenu(boolean state) {
         inMenu = state;
     }
 
+    /**
+     * Checks if the editor UI is in menu state.
+     * @return True if the UI is in menu state, else false.
+     */
     public boolean isInMenu() {
         return inMenu;
     }
 
+    /**
+     * Renders the editor UI.
+     * @param g The Graphics object.
+     */
     public void render(Graphics g) {
         drawGridOnLevel(g);
         drawBorder(g);
@@ -76,7 +96,10 @@ public class EditorUI {
             exitButton.render(g);
         }
     }
-
+    /**
+     * Draws the fruit selector on the editor UI.
+     * @param g The Graphics object.
+     */
     private void drawFruitSelector(Graphics g) {
         final int x = (int) (EDITOR_BORDER_THICKNESS - FRUIT_SIZE * 0.05f);
         final int y = (int) (offsetY + GAME_SCALE * TERRAIN_IMG_HEIGHT + EDITOR_BORDER_THICKNESS * 2 - FRUIT_SIZE * 0.05f);
@@ -84,19 +107,28 @@ public class EditorUI {
         final int selectorWidth = (int) (FRUIT_SIZE * 0.6f);
         g.drawImage(selectorAnimation[animationIndex], x, y, selectorWidth, selectorHeight, null);
     }
-
+    /**
+     * Draws the fruit elements on the editor UI.
+     * @param g The Graphics object.
+     */
     private void drawFruitElements(Graphics g) {
         final int x = (int) (EDITOR_BORDER_THICKNESS - FRUIT_SIZE * 0.2f);
         final int y = (int) (offsetY + GAME_SCALE * TERRAIN_IMG_HEIGHT + EDITOR_BORDER_THICKNESS * 2 - FRUIT_SIZE * 0.2f);
         g.drawImage(appleImg, x, y, FRUIT_SIZE, FRUIT_SIZE, null);
     }
-
+    /**
+     * Draws the player on the editor UI.
+     * @param g The Graphics object.
+     */
     private void drawPlayerElement(Graphics g) {
         final int x = (int) ((GAME_SCALE * TERRAIN_IMG_WIDTH) + 2 * EDITOR_BORDER_THICKNESS);
         final int y = offsetY + EDITOR_BORDER_THICKNESS;
         g.drawImage(playImg, x, y, PLAYER_SIZE, PLAYER_SIZE, null);
     }
-
+    /**
+     * Draws the Player selector on the editor UI.
+     * @param g The Graphics object.
+     */
     private void drawPlayerSelector(Graphics g) {
         final int x = (int) ((GAME_SCALE * TERRAIN_IMG_WIDTH) + 2 * EDITOR_BORDER_THICKNESS);
         final int y = offsetY + EDITOR_BORDER_THICKNESS;
@@ -113,7 +145,10 @@ public class EditorUI {
         }
 
     }
-
+    /**
+     * Draws the border on the editor UI.
+     * @param g The Graphics object.
+     */
     public void drawBorder(Graphics g) {
         // Vertical
         g.fillRect(0, PANEL_HEIGHT / 2, EDITOR_BORDER_THICKNESS, PANEL_HEIGHT / 2);
@@ -127,6 +162,10 @@ public class EditorUI {
 
     }
 
+    /**
+     * Draws the grid on the level.
+     * @param g The Graphics object.
+     */
     public void drawGridOnLevel(Graphics g){
         for (int row = 0; row < TILE_ROW_COUNT; row++) {
             for (int col = 0; col < LEVEL_MAX_COL; col++) {
@@ -140,6 +179,11 @@ public class EditorUI {
         }
     }
 
+    /**
+     * Handles mouse input in elements menu area
+     * @param x mouse x position
+     * @param y mouse y position
+     */
     public void handleMouseClick(int x, int y) {
         // Level area
         if (x < offsetX + EDITOR_BORDER_THICKNESS || y < offsetY + EDITOR_BORDER_THICKNESS)
@@ -176,18 +220,24 @@ public class EditorUI {
         return currentElementType;
     }
 
+    /**
+     * @return currentElementValue chosen element value
+     */
     public int getCurrentElementValue() {
         return currentElementValue;
     }
 
-    public int getOffsetX() {
-        return offsetX;
-    }
-
+    /**
+     * @return offsetY vertical offset
+     */
     public int getOffsetY() {
         return offsetY;
     }
 
+    /**
+     * Draws the terrain elements on the editor UI.
+     * @param g The Graphics object.
+     */
     public void drawTerrainElements(Graphics g) {
         g.drawImage(terrainImg,
                 offsetX + EDITOR_BORDER_THICKNESS,
@@ -196,7 +246,10 @@ public class EditorUI {
                 (int) (GAME_SCALE * TERRAIN_IMG_HEIGHT),
                 null);
     }
-
+    /**
+     * Draws the element selector on the editor UI based on the current chosen element type.
+     * @param g The Graphics object.
+     */
     public void drawElementSelector(Graphics g) {
         switch (currentElementType) {
             case TERRAIN:
@@ -211,7 +264,10 @@ public class EditorUI {
         }
 
     }
-
+    /**
+     * Draws the terrain selector on the editor UI.
+     * @param g The Graphics object.
+     */
     public void drawElementSelectorOnTerrain(Graphics g) {
         g.drawImage(selectorAnimation[animationIndex],
                 selectorPosX,
@@ -221,6 +277,9 @@ public class EditorUI {
                 null);
     }
 
+    /**
+     * Updates selector animation
+     */
     public void updateAnimation() {
         animationTick++;
         if (animationTick >= SELECTOR_SPEED)

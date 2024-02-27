@@ -6,22 +6,24 @@ import states.GameState;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+/**
+ * Handles keyboard inputs for the game.
+ * Passes inputs to specified methods based on game state
+ */
 public class KeyboardInputs implements KeyListener {
     private final GamePanel gamePanel;
-    public KeyboardInputs(GamePanel gamePanel){
+
+    /**
+     * Constructs a KeyboardInputs object
+     *
+     * @param gamePanel  GamePanel object
+     */
+    public KeyboardInputs(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
-        switch (GameState.state) {
-            case MENU:
-                break;
-            case INGAME:
-                break;
-            case EDITOR:
-                break;
-        }
     }
 
     @Override

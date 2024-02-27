@@ -7,9 +7,18 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+/**
+ * Handles mouse inputs for the game.
+ * Passes inputs to specified methods based on game state
+ */
 public class MouseInputs implements MouseListener, MouseMotionListener {
 
-    private GamePanel gamePanel;
+    private final GamePanel gamePanel;
+    /**
+     * Constructs a MouseInputs object
+     *
+     * @param gamePanel  GamePanel object
+     */
     public MouseInputs(GamePanel gamePanel){
         this.gamePanel = gamePanel;
     }
@@ -75,14 +84,8 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        switch (GameState.state) {
-            case START_MENU:
-                break;
-            case INGAME:
-                break;
-            case EDITOR:
-                gamePanel.getGame().getEditor().mouseDragged(e);
-                break;
+        if (GameState.state == GameState.EDITOR) {
+            gamePanel.getGame().getEditor().mouseDragged(e);
         }
     }
 

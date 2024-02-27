@@ -16,18 +16,26 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+/**
+ * The Ingame class represents the state of the game when the player is playing.
+ * It handles rendering, updating, user input, and game logic.
+ */
 public class Ingame extends State implements StateHandler{
-    private Player player;
-    private LevelManager levelManager;
-    private PauseUI pauseUi;
-    private WinUI winUI;
-    private LoseUI loseUI;
+    private final Player player;
+    private final LevelManager levelManager;
+    private final PauseUI pauseUi;
+    private final WinUI winUI;
+    private final LoseUI loseUI;
     private int offsetWidthRender = 0;
 
     private double lastTimeCheck = 0;
     private double currentTime = 0.0f;
     Text time;
 
+    /**
+     * Constructs an Ingame object.
+     * @param game The Game object.
+     */
     public Ingame(Game game) {
         super(game);
         levelManager = new LevelManager(this);
@@ -38,6 +46,10 @@ public class Ingame extends State implements StateHandler{
         time = new Text("000000", (int) (PANEL_WIDTH * 0.05), (int) (PANEL_WIDTH * 0.5f), (int) (PANEL_HEIGHT * 0.1f), game.getAssetsManager().getWhiteText());
     }
 
+    /**
+     * Renders level, player and timer based on the current game state.
+     * @param g The Graphics context.
+     */
     @Override
     public void render(Graphics g) {
 
@@ -58,15 +70,19 @@ public class Ingame extends State implements StateHandler{
         }
     }
 
+    /**
+     * Renders level, player and timer based on the current game state with render offset.
+     * @param g The Graphics context.
+     */
     public void render(Graphics g, int offset) {
         levelManager.render(g, offset);
         player.render(g, offset);
     }
 
-    public void setLastTimeCheck() {
-        lastTimeCheck = System.currentTimeMillis();
-    }
 
+    /**
+     * Reset level to its initial state
+     */
     public void resetLevel() {
         player.reset();
         levelManager.resetLevel();
@@ -74,6 +90,9 @@ public class Ingame extends State implements StateHandler{
         lastTimeCheck = System.currentTimeMillis();
     }
 
+    /**
+     * Updates the game logic.
+     */
     @Override
     public void update() {
         Level.LevelState currentGameState = levelManager.getCurrentLevel().getLevelState();
@@ -99,17 +118,25 @@ public class Ingame extends State implements StateHandler{
         }
     }
 
+    /**
+     * Updates timer
+     */
     private void updateTimer() {
         currentTime += ((System.currentTimeMillis() - lastTimeCheck) / 1000.0f);
         lastTimeCheck = System.currentTimeMillis();
-        time.updateText(String.format(TIME_FORMAT, currentTime));
+        time.changeText(String.format(TIME_FORMAT, currentTime));
     }
 
+    /**
+     * @return time since player started playing the current level.
+     */
     private float getCurrentTime() {
         return (float) currentTime;
     }
 
-
+    /**
+     * Updates the rendering offset based on the player's position.
+     */
     private void updateOffsetRender() {
         int currentX = (int) player.getHitbox().x;
         int deltaOffset = currentX - offsetWidthRender;
@@ -225,16 +252,11 @@ public class Ingame extends State implements StateHandler{
     @Override
     public void keyReleased(KeyEvent e) {
         switch (levelManager.getCurrentLevel().getLevelState()) {
-            case WON -> {
-            }
-            case LOST -> {
-            }
             case PAUSED -> {
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_ESCAPE:
-                        levelManager.getCurrentLevel().setLevelState(Level.LevelState.PLAYING);
-                        lastTimeCheck = System.currentTimeMillis();
-                        break;
+
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    levelManager.getCurrentLevel().setLevelState(Level.LevelState.PLAYING);
+                    lastTimeCheck = System.currentTimeMillis();
                 }
             }
             case PLAYING -> {
@@ -261,9 +283,17 @@ public class Ingame extends State implements StateHandler{
         }
     }
 
+    /**
+     * Retrieves the player object.
+     * @return The player object.
+     */
     public Player getPlayer() {
         return player;
     }
+    /**
+     * Retrieves the levelManager object.
+     * @return The LevelManager object.
+     */
     public LevelManager getLevelManager() {
         return levelManager;
     }

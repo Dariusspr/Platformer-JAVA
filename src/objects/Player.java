@@ -10,19 +10,29 @@ import static utils.Constants.Game.*;
 import static utils.Constants.Player.*;
 import static objects.Collision.*;
 
+/**
+ * Represents the player object in the game.
+ */
 public class Player extends Object {
-    private BufferedImage[][] animations;
+    private final BufferedImage[][] animations;
     private int animationIndex = 0;
     private int animationTick = 0;
     private int playerAction;
     private boolean movingUp, movingLeft, movingRight;
-    private final String character = "MaskDude";
     private boolean flying, doubleJump;
     private float flyingSpeed = 0;
 
 
     private final Ingame ingame;
 
+    /**
+     * Constructs a player object with the specified coordinates, animations
+     *
+     * @param x          The initial x-coordinate of the player.
+     * @param y          The initial y-coordinate of the player.
+     * @param animations The animation frames for the player.
+     * @param ingame     The InGame state.
+     */
     public Player(float x, float y, BufferedImage[][] animations, Ingame ingame) {
         super(x, y, PLAYER_SIZE, PLAYER_SIZE, PLAYER_HITBOX_WIDTH, PLAYER_HITBOX_HEIGHT, PLAYER_WIDTH_OFFSET, PLAYER_HEIGHT_OFFSET);
         this.ingame = ingame;
@@ -30,21 +40,37 @@ public class Player extends Object {
         setAction(PLAYER_IDLE);
     }
 
+    /**
+     * Updates the player's position, action, and animation.
+     */
     public void update() {
             updatePosition();
             updateAction();
             updateAnimation();
     }
 
-
+    /**
+     * Renders the player.
+     *
+     * @param g The graphics context.
+     */
     public void render(Graphics g) {
         super.render(animations[playerAction][animationIndex], g);
     }
 
+    /**
+     * Renders the player with the specified offset.
+     *
+     * @param g      The graphics context.
+     * @param offset The offset value.
+     */
     public void render(Graphics g, int offset) {
             super.render(animations[playerAction][animationIndex], g, offset);
     }
 
+    /**
+     * Updates the player's position based on input and its current position and state.
+     */
     public void updatePosition() {
         if (movingUp) {
             jump();
@@ -55,6 +81,9 @@ public class Player extends Object {
         }
     }
 
+    /**
+     * Handles player jump and double jump mechanic
+     */
     private void jump() {
         if (flying && flyingSpeed <= 0 && !doubleJump) {
             doubleJump = true;
@@ -68,6 +97,9 @@ public class Player extends Object {
         flyingSpeed = PLAYER_JUMP_SPEED;
     }
 
+    /**
+     * Updates the player's vertical position.
+     */
     private void updateYPosition() {
         float x = getX();
         float y = getY();
@@ -112,6 +144,9 @@ public class Player extends Object {
         super.updateHitbox();
     }
 
+    /**
+     * Updates the player's horizontal position.
+     */
     private void updateXPosition() {
         float x = getX();
         float y = getY();
@@ -123,7 +158,7 @@ public class Player extends Object {
             else {
                 x -= (int) hitbox.x % TILE_SIZE;
             }
-            setDirecton(LEFT_DIRECTION);
+            setDirection(LEFT_DIRECTION);
         }
 
         if (movingRight && !movingLeft) {
@@ -133,13 +168,16 @@ public class Player extends Object {
             else {
                 x += (TILE_SIZE - 1 - (hitbox.x + hitbox.width) % TILE_SIZE);
             }
-            setDirecton(RIGHT_DIRECTION);
+            setDirection(RIGHT_DIRECTION);
         }
 
         super.updatePosition(x, y);
         super.updateHitbox();
     }
 
+    /**
+     * Updates the player's action.
+     */
     private void updateAction() {
         if (flying && flyingSpeed > 0 && doubleJump) {
             setAction(PLAYER_DOUBLE_JUMP);
@@ -161,6 +199,11 @@ public class Player extends Object {
         }
     }
 
+    /**
+     * Sets new player's action.
+     *
+     * @param action new action
+     */
     private void setAction(int action) {
         if (playerAction != action) {
             playerAction = action;
@@ -168,6 +211,9 @@ public class Player extends Object {
         }
     }
 
+    /**
+     * Updates the player's animation.
+     */
     public void updateAnimation() {
         animationTick++;
         if (animationTick >= PLAYER_ANIMATION_SPEED)
@@ -177,18 +223,33 @@ public class Player extends Object {
         }
     }
 
+    /**
+     * Sets moving up
+     * @param state true or false
+     */
     public void setMovingUp(boolean state) {
         this.movingUp = state;
     }
 
+    /**
+     * Sets moving left
+     * @param state true or false
+     */
     public void setMovingLeft(boolean state) {
         this.movingLeft = state;
     }
 
+    /**
+     * Sets moving right
+     * @param state true or false
+     */
     public void setMovingRight(boolean state) {
         this.movingRight = state;
     }
 
+    /**
+     * Resets player to state at the beginning of the level
+     */
     public void reset() {
         this.setX(ingame.getLevelManager().getCurrentLevel().getPlayerX());
         this.setY(ingame.getLevelManager().getCurrentLevel().getPlayerY());

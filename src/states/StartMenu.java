@@ -8,12 +8,19 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import static utils.Constants.UI.StartMenu.*;
-
+/**
+ * The Start Menu state displays options for playing, or quiting game
+ */
 public class StartMenu extends State implements StateHandler{
 
     boolean onPlay, onExit;
-    private Button playButton;
-    private Button exitButton;
+    private final Button playButton;
+    private final Button exitButton;
+
+    /**
+     * Constructs the StartMenu object.
+     * @param game The Game object.
+     */
     public StartMenu(Game game) {
         super(game);
         playButton = new Button(PLAY_BUTTON_POSX, PLAY_BUTTON_POSY, STARTMENU_BUTTON_WIDTH, STARTMENU_BUTTON_HEIGHT, game.getAssetsManager().getPlayButtonAnimations());
@@ -21,13 +28,19 @@ public class StartMenu extends State implements StateHandler{
     }
 
 
+    /**
+     * Renders the StartMenu.
+     * @param g The Graphics object.
+     */
     @Override
     public void render(Graphics g) {
             playButton.render(g);
             exitButton.render(g);
     }
 
-
+    /**
+     * Updates button animation if mouse is not hovering it
+     */
     @Override
     public void update() {
         if (!onPlay)
@@ -56,11 +69,12 @@ public class StartMenu extends State implements StateHandler{
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if((onPlay = playButton.onButton(e.getX(), e.getY()))) {
+        onPlay = playButton.onButton(e.getX(), e.getY());
+        if(onPlay) {
             playButton.buttonDown();
         }
-
-        if((onExit = exitButton.onButton(e.getX(), e.getY()))) {
+        onExit = exitButton.onButton(e.getX(), e.getY());
+        if(onExit) {
             exitButton.buttonDown();
         }
         else {
