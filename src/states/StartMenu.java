@@ -39,7 +39,7 @@ public class StartMenu extends State implements StateHandler{
     }
 
     /**
-     * Updates button animation if mouse is not hovering it
+     * Updates button animation if mouse is not hovering over it
      */
     @Override
     public void update() {
