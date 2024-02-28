@@ -1,3 +1,7 @@
+/*
+    Darius Spruogis PS 5gr.
+*/
+
 package main;
 
 public class Main {
