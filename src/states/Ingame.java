@@ -43,7 +43,7 @@ public class Ingame extends State implements StateHandler{
         pauseUi = new PauseUI(this);
         loseUI = new LoseUI(this);
         winUI = new WinUI(this);
-        time = new Text("000000", (int) (PANEL_WIDTH * 0.05), (int) (PANEL_WIDTH * 0.5f), (int) (PANEL_HEIGHT * 0.1f), game.getAssetsManager().getWhiteText());
+        time = new Text("0000", (int) (PANEL_WIDTH * 0.05), (int) (PANEL_WIDTH * 0.5f), (int) (PANEL_HEIGHT * 0.1f), game.getAssetsManager().getWhiteText());
     }
 
     /**
@@ -73,6 +73,7 @@ public class Ingame extends State implements StateHandler{
     /**
      * Renders level, player and timer based on the current game state with render offset.
      * @param g The Graphics context.
+     * @param offset Render offset x.
      */
     public void render(Graphics g, int offset) {
         levelManager.render(g, offset);
@@ -119,12 +120,15 @@ public class Ingame extends State implements StateHandler{
     }
 
     /**
-     * Updates timer
+     * Updates timer every 100ms
      */
     private void updateTimer() {
-        currentTime += ((System.currentTimeMillis() - lastTimeCheck) / 1000.0f);
-        lastTimeCheck = System.currentTimeMillis();
-        time.changeText(String.format(TIME_FORMAT, currentTime));
+        double delta = System.currentTimeMillis() - lastTimeCheck;
+        if (delta > 100) {
+            currentTime += (delta / 1000.0f);
+            lastTimeCheck = System.currentTimeMillis();
+            time.changeText(String.format(TIME_FORMAT, currentTime));
+        }
     }
 
     /**

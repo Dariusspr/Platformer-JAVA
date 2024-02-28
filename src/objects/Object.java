@@ -90,7 +90,7 @@ public abstract class Object {
     }
 
     /**
-     * Renders hitbox of the object
+     * Renders hitbox of the object (For debugging)
      *  @param g  The graphics context.
      */
 
