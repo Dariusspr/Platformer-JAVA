@@ -120,11 +120,12 @@ public class Ingame extends State implements StateHandler{
     }
 
     /**
-     * Updates timer every 100ms
+     * Updates timer every TIMER_UPDATE_FREQ ms
      */
     private void updateTimer() {
+        final int TIMER_UPDATE_FREQ = 10;
         double delta = System.currentTimeMillis() - lastTimeCheck;
-        if (delta > 100) {
+        if (delta > TIMER_UPDATE_FREQ) {
             currentTime += (delta / 1000.0f);
             lastTimeCheck = System.currentTimeMillis();
             time.changeText(String.format(TIME_FORMAT, currentTime));

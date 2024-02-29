@@ -67,14 +67,14 @@ public class Constants {
         public static final int PLAYER_ANIM_MAX_FRAMES = 12;
         public static final int[] PLAYER_ANIM_LENGTH= {11, 7, 12, 1, 1, 6, 5, 1, 1};
         public static final int PLAYER_IDLE = 0;
-        public static final int PLAYER_HIT = 1;
+        //public static final int PLAYER_HIT = 1;
         public static final int PLAYER_RUN = 2;
         public static final int PLAYER_JUMP = 3;
         public static final int PLAYER_FALL = 4;
         public static final int PLAYER_DOUBLE_JUMP = 5;
-        public static final int PLAYER_WALL_JUMP = 6;
+        //public static final int PLAYER_WALL_JUMP = 6;
         public static final int PLAYER_APPEAR = 7;
-        public static final int PLAYER_DISAPPEAR = 8;
+        //public static final int PLAYER_DISAPPEAR = 8;
 
     }
 
@@ -92,7 +92,7 @@ public class Constants {
     }
 
     public static class UI {
-        public final static String TIME_FORMAT = "%.1f";
+        public final static String TIME_FORMAT = "%.2f";
         public static int BUTTON_ANIM_LENGTH = 4;
         public static int BUTTON_ANIM_HEIGHT = 32;
         public static int BUTTON_ANIM_WIDTH = 96;
